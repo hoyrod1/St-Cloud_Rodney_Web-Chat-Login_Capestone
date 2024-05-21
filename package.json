@@ -1,0 +1,25 @@
+{
+  "name": "325-1-capestone-project",
+  "version": "1.0.0",
+  "description": "1 on 1 Personal Training Video App",
+  "main": "app.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoyrod1/325-1-capestone-project.git"
+  },
+  "author": "Rodney St. Cloud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoyrod1/325-1-capestone-project/issues"
+  },
+  "homepage": "https://github.com/hoyrod1/325-1-capestone-project#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0",
+    "socket.io": "^4.7.5"
+  }
+}
