@@ -1,12 +1,16 @@
 const express = require("express");
 const req = require("express/lib/request");
 const bodyParser = require("body-parser");
-const http = require("http");
-const PORT = process.env.PORT || 4040;
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const PORT = process.env.PORT || 3000;
 
 const app = express();
-const server = http.createServer(app);
-
+const server = createServer(app);
+const socketIo = new Server(server, {
+  /* options */
+});
+// socketIo
 //===========================================================================================//
 app.use(express.json());
 //-------------------------------------------------------------------------------------------//
@@ -31,10 +35,23 @@ app.use(bodyParser.json({ extended: true }));
 app.use(express.static("public_html"));
 //===========================================================================================//
 //===========================================================================================//
+//-------------------------------------------------------------------------------------------//
 // Get route
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public_html/index.html");
 });
+//-------------------------------------------------------------------------------------------//
+// Connect to socket.io
+socketIo.on("connection", (socket) => {
+  console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
+
+  // socket.on("disconnect", () => {
+  //   console.log(
+  //     `Successfully disconnected to wss/socket.io server with the id ${socket.id}`
+  //   );
+  // });
+});
+
 //-------------------------------------------------------------------------------------------//
 
 //===========================================================================================//
