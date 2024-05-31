@@ -5,11 +5,200 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome The My Video Chat</title>
-
+    <!-- <link rel="stylesheet" href="./styles/style.css" /> -->
+    <link rel="stylesheet" href="./styles/index.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script defer type="module" src="./javascript/main.js"></script>
+    <script defer type="module" src="./javascript/store.js"></script>
   </head>
   <body>
-    <h1>Welcome to The Video Chat</h1>
+    <div class="main_container">
+      <!--------------------------------------------------------------------->
+      <div class="dashboard_container">
+        <!----------------------------------------------------------------->
+        <div class="logo_container">
+          <img src="utilities/test-Images/logo.png" alt="" />
+        </div>
+        <!----------------------------------------------------------------->
+        <div class="description_container">
+          <p class="description_container_paragraph">
+            talk with other users by passing his personal code or talk with new
+            friends
+          </p>
+        </div>
+        <!----------------------------------------------------------------->
+        <div class="personal_code_container">
+          <div class="personal_code_title_container">
+            <div class="personal_code_title_paragraph">Your personal code</div>
+          </div>
+          <div class="personal_code_value_container">
+            <p
+              class="personal_code_value_paragraph"
+              id="personal_code_paragraph"
+            >
+              %73Dcv2
+            </p>
+            <button
+              class="personal_code_copy_button"
+              id="personal_code_copy_button"
+            >
+              <img src="utilities/test-Images/copyButton.png" />
+            </button>
+          </div>
+        </div>
+        <!----------------------------------------------------------------->
+        <div class="personal_code_connecting_container">
+          <p class="personal_code_connecting_paragraph">Personal Code</p>
+          <div class="personal_code_connecting_input_container">
+            <input
+              type="text"
+              class="personal_code_input"
+              id="personal_code_input"
+            />
+          </div>
+          <div class="personal_code_connecting_buttons_container">
+            <button class="connecting_button" id="personal_code_chat_button">
+              <img
+                src="utilities/test-Images/chatButton.png"
+                class="connecting_buttons_image"
+              />
+            </button>
+            <button class="connecting_button" id="personal_code_video_button">
+              <img
+                src="utilities/test-Images/videoButton.png"
+                class="connecting_buttons_image"
+              />
+            </button>
+          </div>
+        </div>
+        <!------------>
+        <div class="stranger_connecting_container">
+          <p class="stranger_title_container">Stranger</p>
+          <div class="stranger_buttons_container">
+            <button class="connecting_button" id="stranger_chat_button">
+              <img
+                src="utilities/test-Images/chatButton.png"
+                class="connecting_buttons_image"
+              />
+            </button>
+            <button class="connecting_button" id="stranger_video_button">
+              <img
+                src="utilities/test-Images/videoButton.png"
+                class="connecting_buttons_image"
+              />
+            </button>
+          </div>
+        </div>
+        <div class="checkbox_container">
+          <div class="checkbox_connection" id="allow_strangers_checkbox">
+            <img
+              src="utilities/test-Images/check.png"
+              alt=""
+              id="allow_strangers_checkbox_image"
+              class="display_none"
+            />
+          </div>
+          <p class="checkbox_container_paragraph">
+            Allow connection from strangers
+          </p>
+        </div>
+        <div class="dashboard_blur display_none" id="dashboard_blur"></div>
+        <!--------------------------------------------------------------------->
+      </div>
+      <!--------------------------------------------------------------------->
+      <div class="call_container">
+        <div class="videos_container">
+          <div class="videos_placeholder" id="video_placeholder">
+            <img src="utilities/test-Images/logo.png" alt="" />
+          </div>
+          <video
+            src=""
+            class="remote_video display_none"
+            autoplay
+            id="remote_video"
+          ></video>
+          <div class="local_video_container">
+            <video class="local_video" id="local_video" muted autoplay></video>
+          </div>
+          <!---------------------- VIDEO CALL BUTTONS ---------------------->
+          <div class="call_buttons_container display_none" id="call_buttons">
+            <button class="call_button_small" id="mic_button">
+              <img
+                src="utilities/test-Images/mic.png"
+                id="mic_button_image"
+                alt=""
+              />
+            </button>
+            <button class="call_button_small" id="camera_button">
+              <img
+                src="utilities/test-Images/camera.png"
+                id="camera_button_image"
+                alt=""
+              />
+            </button>
+            <button class="call_button_small" id="hang_up_button">
+              <img src="utilities/test-Images/hangUp.png" alt="" />
+            </button>
+            <button class="call_button_small" id="screen_sharing_button">
+              <img
+                src="utilities/test-Images/switchCameraScreenSharing.png"
+                alt=""
+              />
+            </button>
+            <button class="call_button_small" id="start_recording_button">
+              <img src="utilities/test-Images/recordingStart.png" alt="" />
+            </button>
+          </div>
+          <!----------------------- FINIISH CALL BUTTON ----------------------->
+          <div
+            class="finish_chat_button_container display_none"
+            id="finish_chat_button_container"
+          >
+            <button class="call_button_large" id="finish_chat_call_button">
+              <img src="utilities/test-Images/hangUp.png" alt="" />
+            </button>
+          </div>
+          <!------------------------ VIDEO CALL BUTTON ------------------------>
+          <div
+            class="video_recording_buttons_container display_none"
+            id="video_recording_buttons"
+          >
+            <button id="pause_recording_button">
+              <img src="utilities/test-Images/pause.png" />
+            </button>
+            <button
+              id="resume_recording_button display_none"
+              class="display_none"
+            >
+              <img src="utilities/test-Images/resume.png" />
+            </button>
+            <button id="stop_recording_button">Stop Recording</button>
+          </div>
+          <!------------------------------------------------------------------->
+        </div>
+      </div>
+      <!--------------------------------------------------------------------->
+
+      <!--------------------------------------------------------------------->
+      <div class="messenger_container">
+        <div class="messages_container" id="messages_container"></div>
+        <div class="new_message_container display_none" id="new_message">
+          <input
+            type="text"
+            class="new_message_input"
+            id="new_message_input"
+            placeholder="Type your message..."
+          />
+          <button class="send_message_button" id="send_message_button">
+            <img
+              src="utilities/test-Images/sendMessageButton.png"
+              alt=""
+              class="send_message_button_image"
+            />
+          </button>
+        </div>
+      </div>
+      <!--------------------------------------------------------------------->
+    </div>
   </body>
 </html>

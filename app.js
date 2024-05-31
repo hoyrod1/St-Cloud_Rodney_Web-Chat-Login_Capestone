@@ -34,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
 app.use(express.static("public_html"));
 //===========================================================================================//
+
 //===========================================================================================//
 //-------------------------------------------------------------------------------------------//
 // Get route
@@ -41,18 +42,35 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public_html/index.html");
 });
 //-------------------------------------------------------------------------------------------//
+//===========================================================================================//
+
+//===========================================================================================//
+// connectedUsers stores an array of the connected socket.id's
+let connectedUsers = [];
 // Connect to socket.io
 socketIo.on("connection", (socket) => {
   console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
+  // Add the active socket.id to the connectedUsers array
+  connectedUsers.push(socket.id);
 
-  // socket.on("disconnect", () => {
-  //   console.log(
-  //     `Successfully disconnected to wss/socket.io server with the id ${socket.id}`
-  //   );
-  // });
+  console.log(connectedUsers);
+  // Disconnect to socket.io when the browser closes
+  socket.on("disconnect", () => {
+    console.log(
+      `Successfully disconnected to wss/socket.io server with the id ${socket.id}`
+    );
+    // After disconnecting filter through the connectedUsers array
+    // and only return the socket.id's still in the array
+    const newConnectedUsers = connectedUsers.filter((userSocketId) => {
+      userSocketId !== socket.id;
+    });
+    // The remaining socket.id's remaining will be added to the connectedUsers
+    connectedUsers = newConnectedUsers;
+    console.log(connectedUsers);
+  });
 });
-
 //-------------------------------------------------------------------------------------------//
+//===========================================================================================//
 
 //===========================================================================================//
 // 404 Middleware
