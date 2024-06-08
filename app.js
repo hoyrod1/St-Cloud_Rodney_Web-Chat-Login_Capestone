@@ -49,12 +49,23 @@ app.get("/", (req, res) => {
 let connectedUsers = [];
 // Connect to socket.io
 socketIo.on("connection", (socket) => {
+  //===========================================================================================//
   console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
   // Add the active socket.id to the connectedUsers array
   connectedUsers.push(socket.id);
-
   console.log(connectedUsers);
-  // Disconnect to socket.io when the browser closes
+  //===========================================================================================//
+
+  //===========================================================================================//
+  // Emmitt the socket.io pre-offer event
+  socket.on("pre-offer", (data) => {
+    console.log("Pre-offer recieved");
+    console.log(data);
+  });
+  //===========================================================================================//
+
+  //=============================== DISCONNECT FROM SOCKET.IO =================================//
+  // Disconnect to socket.io when the browser closes //
   socket.on("disconnect", () => {
     console.log(
       `Successfully disconnected to wss/socket.io server with the id ${socket.id}`
@@ -68,6 +79,7 @@ socketIo.on("connection", (socket) => {
     connectedUsers = newConnectedUsers;
     console.log(connectedUsers);
   });
+  //===========================================================================================//
 });
 //-------------------------------------------------------------------------------------------//
 //===========================================================================================//
