@@ -2,6 +2,7 @@ import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as constant from "./constant.js";
 import * as wss from "./wss.js";
+// import { getIncomingCallDialog } from "./elements.js";
 //========================= CONNECT USING SOCKET.IO =============================//
 // INITIALIZE SOCKET.IO AND ESTABLISH THE CONNECTION TO SOCKET.IO SERVER
 const socket = io();
@@ -34,15 +35,23 @@ const personalCodeVideoButton = document.getElementById(
 // Attached a addeventListener for chat button
 personalCodeChatButton.addEventListener("click", (e) => {
   // console.log(`Personal Chat has been clicked`);
-  const sendPersonalCode = document.getElementById("personal_code_input").value;
+  const sendPersonalId = document.getElementById("personal_code_input").value;
   const chatCallType = constant.callType.CHAT_PERSONAL_CODE;
-  webRTChandler.sendPreOffer(chatCallType, sendPersonalCode);
+  webRTChandler.sendPreOffer(chatCallType, sendPersonalId);
 });
 // Attached a addeventListener for video button
 personalCodeVideoButton.addEventListener("click", (e) => {
   // console.log(`Personal Video has been clicked`);
-  const sendPersonalCode = document.getElementById("personal_code_input").value;
+  const sendPersonalId = document.getElementById("personal_code_input").value;
   const videoCallType = constant.callType.VIDEO_PERSONAL_CODE;
-  webRTChandler.sendPreOffer(videoCallType, sendPersonalCode);
+  webRTChandler.sendPreOffer(videoCallType, sendPersonalId);
 });
+//===============================================================================//
+
+//===============================================================================//
+// getIncomingCallDialog(
+//   "Video",
+//   () => {},
+//   () => {}
+// );
 //===============================================================================//

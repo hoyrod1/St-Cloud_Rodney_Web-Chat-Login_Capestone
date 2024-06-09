@@ -53,14 +53,28 @@ socketIo.on("connection", (socket) => {
   console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
   // Add the active socket.id to the connectedUsers array
   connectedUsers.push(socket.id);
-  console.log(connectedUsers);
   //===========================================================================================//
 
   //===========================================================================================//
   // Emmitt the socket.io pre-offer event
   socket.on("pre-offer", (data) => {
-    console.log("Pre-offer recieved");
-    console.log(data);
+    const { sendPersonalId, callType } = data;
+    console.log(
+      `Pre-Offer from the app.js page with the data: ${sendPersonalId} - ${callType}`
+    );
+
+    const connectedUser = connectedUsers.find(
+      (userSocketId) => userSocketId === sendPersonalId
+    );
+
+    if (connectedUser) {
+      const data = {
+        callerSocketId: socket.id,
+        callType,
+      };
+
+      socketIo.to(sendPersonalId).emit("pre-offer", data);
+    }
   });
   //===========================================================================================//
 
