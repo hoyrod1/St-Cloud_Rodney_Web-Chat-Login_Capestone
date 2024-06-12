@@ -6,7 +6,7 @@ export const getIncomingCallDialog = (
   acceptCallHandler,
   rejectCallHandler
 ) => {
-  console.log("Getting a incoming call dialog!!!");
+  // console.log("Getting a incoming call dialog!!!");
   //----------------------------------------------------//
   const dialogDivWrap = document.createElement("div");
   dialogDivWrap.classList.add("dialog_wrapper");
@@ -33,10 +33,11 @@ export const getIncomingCallDialog = (
   //----------------------------------------------------//
 
   //----------------------------------------------------//
-  // Accept Call Button
+  // Button container
   const buttonContainerDiv = document.createElement("div");
   buttonContainerDiv.classList.add("dialog_button_container");
 
+  // Accept Call Button
   const acceptCallButton = document.createElement("button");
   acceptCallButton.classList.add("dialog_accept_call_button");
 
@@ -72,6 +73,106 @@ export const getIncomingCallDialog = (
   // dialogHTML.appendChild(dialogDivWrap);
   //----------------------------------------------------//
 
+  //----------------------------------------------------//
+  // addEventListener TO DETERMINE  IF CALL IS ACCEPTED
+  acceptCallButton.addEventListener("click", (e) => {
+    acceptCallHandler();
+  });
+  // addEventListener TO DETERMINE  IF CALL IS ACCEPTED
+  rejectCallButton.addEventListener("click", (e) => {
+    rejectCallHandler();
+  });
+  //----------------------------------------------------//
+
+  //----------------------------------------------------//
+  return dialogDivWrap;
+  //----------------------------------------------------//
+};
+
+export const receivedCallDialog = (rejectCallHandler) => {
+  // console.log("Recieved incoming call dialog!!!");
+  //----------------------------------------------------//
+  const dialogDivWrap = document.createElement("div");
+  dialogDivWrap.classList.add("dialog_wrapper");
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const dialogContentDiv = document.createElement("div");
+  dialogContentDiv.classList.add("dialog_content");
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const title = document.createElement("p");
+  title.classList.add("dialog_title");
+  title.innerHTML = `Calling`;
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const imageContainerDiv = document.createElement("div");
+  imageContainerDiv.classList.add("dialog_image_container");
+  const image = document.createElement("img");
+  const avatarImgPath = "./utilities/test-images/dialogAvatar.png";
+  image.src = avatarImgPath;
+  imageContainerDiv.appendChild(image);
+  //----------------------------------------------------//
+  // Button container
+  const buttonContainerDiv = document.createElement("div");
+  buttonContainerDiv.classList.add("dialog_button_container");
+  // Reject incoming call Button
+  const rejectCallButton = document.createElement("button");
+  rejectCallButton.classList.add("dialog_reject_call_button");
+  // Reject incoming call Button image
+  const rejectCallImg = document.createElement("img");
+  rejectCallImg.classList.add("dialog_button_image");
+  const rejectCallImgPath = "./utilities/test-images/rejectCall.png";
+  rejectCallImg.src = rejectCallImgPath;
+  rejectCallButton.appendChild(rejectCallImg);
+  //====================================================//
+  buttonContainerDiv.appendChild(rejectCallButton);
+  //====================================================//
+  dialogContentDiv.appendChild(title);
+  dialogContentDiv.appendChild(imageContainerDiv);
+  //====================================================//
+  dialogDivWrap.appendChild(dialogContentDiv);
+  //====================================================//
+  //----------------------------------------------------//
+  return dialogDivWrap;
+  //----------------------------------------------------//
+};
+//============================================================================//
+
+//============================================================================//
+export const getInfoDialog = (dialogTitle, descriptionText) => {
+  //----------------------------------------------------//
+  const dialogDivWrap = document.createElement("div");
+  dialogDivWrap.classList.add("dialog_wrapper");
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const dialogContentDiv = document.createElement("div");
+  dialogContentDiv.classList.add("dialog_content");
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const title = document.createElement("p");
+  title.classList.add("dialog_title");
+  title.innerHTML = dialogTitle;
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const imageContainerDiv = document.createElement("div");
+  imageContainerDiv.classList.add("dialog_image_container");
+  const image = document.createElement("img");
+  const avatarImgPath = "./utilities/test-images/dialogAvatar.png";
+  image.src = avatarImgPath;
+  imageContainerDiv.appendChild(image);
+  //----------------------------------------------------//
+  //----------------------------------------------------//
+  const descriptionPtag = document.createElement("p");
+  descriptionPtag.classList.add("dialog_description");
+  descriptionPtag.innerHTML = descriptionText;
+  //====================================================//
+  //====================================================//
+  dialogContentDiv.appendChild(title);
+  dialogContentDiv.appendChild(imageContainerDiv);
+  dialogContentDiv.appendChild(descriptionPtag);
+  //====================================================//
+  dialogDivWrap.appendChild(dialogContentDiv);
+  //====================================================//
   //----------------------------------------------------//
   return dialogDivWrap;
   //----------------------------------------------------//

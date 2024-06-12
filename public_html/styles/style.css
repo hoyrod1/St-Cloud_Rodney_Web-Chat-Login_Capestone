@@ -1,4 +1,4 @@
-button {
+/* button {
   background: transparent;
   box-shadow: 0px 0px 0px transparent;
   border: 0px solid transparent;
@@ -294,7 +294,7 @@ body {
   margin: 30px 40px 40px 40px;
   border-radius: 15px;
   background: linear-gradient(168.68deg, #0052c9 1.12%, #0a91db 100%);
-  /* background-image: url('../utils/images/logo.png'); */
+  /* background-image: url('../utils/images/logo.png'); 
 }
 
 .videos_placeholder {
@@ -475,4 +475,5 @@ body {
 
 .display_none {
   display: none;
-}
+} 
+*/

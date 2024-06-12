@@ -50,23 +50,23 @@ let connectedUsers = [];
 // Connect to socket.io
 socketIo.on("connection", (socket) => {
   //===========================================================================================//
-  console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
+  // console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
   // Add the active socket.id to the connectedUsers array
   connectedUsers.push(socket.id);
   //===========================================================================================//
 
-  //===========================================================================================//
-  // Emmitt the socket.io pre-offer event
+  //================================= EMIT PRE-OFFER EVENT ====================================//
+  // Emit the socket.io pre-offer event
   socket.on("pre-offer", (data) => {
     const { sendPersonalId, callType } = data;
-    console.log(
-      `Pre-Offer from the app.js page with the data: ${sendPersonalId} - ${callType}`
-    );
+    // console.log(
+    //   `Pre-Offer from the app.js page with the data: ${sendPersonalId} - ${callType}`
+    // );
 
     const connectedUser = connectedUsers.find(
       (userSocketId) => userSocketId === sendPersonalId
     );
-
+    //----------------------------------------------------------------------------------------//
     if (connectedUser) {
       const data = {
         callerSocketId: socket.id,
@@ -74,6 +74,29 @@ socketIo.on("connection", (socket) => {
       };
 
       socketIo.to(sendPersonalId).emit("pre-offer", data);
+    } else {
+      const data = {
+        preOfferAnswer: "CALLEE_NOT_FOUND",
+      };
+      socketIo.to(socket.id).emit("pre-offer-answer", data);
+    }
+    //----------------------------------------------------------------------------------------//
+  });
+  //===========================================================================================//
+
+  //============================== EMIT PRE-OFFER-ANSWER EVENT ================================//
+  // Emit the socket.io pre-offer event
+  socket.on("pre-offer-answer", (data) => {
+    const { callerSocketID, preOfferAnswer } = data;
+    // console.log(data);
+    // console.log(connectedUsers);
+
+    const connectedUser = connectedUsers.find(
+      (userSocketId) => userSocketId === callerSocketID
+    );
+    // console.log(connectedUser);
+    if (connectedUser) {
+      socketIo.to(callerSocketID).emit("pre-offer-answer", data);
     }
   });
   //===========================================================================================//
@@ -87,7 +110,7 @@ socketIo.on("connection", (socket) => {
     // After disconnecting filter through the connectedUsers array
     // and only return the socket.id's still in the array
     const newConnectedUsers = connectedUsers.filter((userSocketId) => {
-      userSocketId !== socket.id;
+      return userSocketId !== socket.id;
     });
     // The remaining socket.id's remaining will be added to the connectedUsers
     connectedUsers = newConnectedUsers;

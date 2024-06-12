@@ -19,6 +19,7 @@ export const registerSocketEvent = (socket) => {
     // console.log(
     //   `Successfully connected to wss/socket.io server with the id ${socket.id}`
     // );
+
     // Injecting the socket.id in the setSoketId function in the store.js file
     store.setSocketId(socket.id);
     // Injecting the socket.id into the updatePersonalCode function be displayed in the UI
@@ -31,15 +32,31 @@ export const registerSocketEvent = (socket) => {
     webRTChandler.handlePreOffer(data);
   });
   //------------------------------------------------------------------------------------//
+
+  //------------------------------------------------------------------------------------//
+  socket.on("pre-offer-answer", (data) => {
+    webRTChandler.handlePreOfferAnswer(data);
+  });
+  //------------------------------------------------------------------------------------//
 };
 //======================================================================================//
 
 //======================================================================================//
 export const sendPreOffer = (data) => {
-  console.log(
-    `Emmitting pre-offer from sendPreOffer function with the data value: ${data}`
-  );
+  // const { callType, sendPersonalId } = data;
+  // console.log(
+  //   `Emmitting pre-offer from sendPreOffer function with the data value: ${callType} ${sendPersonalId}`
+  // );
   // Emmitting a event "pre-offer" and passing the video or chat call type data
   socketIO.emit("pre-offer", data);
+};
+//======================================================================================//
+
+//======================================================================================//
+export const sendPreOfferAnswer = (data) => {
+  // const { callerSocketID, preOfferAnswer } = data;
+  // console.log(`Emmitting pre-offer-answer ${preOfferAnswer} ${callerSocketID}`);
+  // Emmitting a event "pre-offer-answer" and passing the video or chat call type data
+  socketIO.emit("pre-offer-answer", data);
 };
 //======================================================================================//
