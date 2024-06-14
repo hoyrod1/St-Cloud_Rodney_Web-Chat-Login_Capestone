@@ -16,6 +16,24 @@ export const updatePersonalCode = (personalCode) => {
 //============================================================================//
 
 //============================================================================//
+export const updateLocalVideo = (stream) => {
+  const localVideo = document.getElementById("local_video");
+  localVideo.srcObject = stream;
+
+  localVideo.addEventListener("loadedmetadata", (e) => {
+    localVideo.play();
+  });
+};
+//============================================================================//
+
+//============================================================================//
+export const updateRemoteVideo = (stream) => {
+  const remoteVideo = document.getElementById("remote_video");
+  remoteVideo.srcObject = stream;
+};
+//============================================================================//
+
+//============================================================================//
 export const showIncomingCallDialog = (
   callType,
   acceptCallHandler,

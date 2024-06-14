@@ -101,6 +101,21 @@ socketIo.on("connection", (socket) => {
   });
   //===========================================================================================//
 
+  //============================== EMIT RTC EVENT ================================//
+  // Emit the socket.io wenRTC-signaling event
+  socket.on("webRTC-signaling", (data) => {
+    const { connectedUserSocketId } = data;
+
+    const connectedUser = connectedUsers.find(
+      (userSocketId) => userSocketId === connectedUserSocketId
+    );
+    // console.log(connectedUser);
+    if (connectedUser) {
+      socketIo.to(connectedUserSocketId).emit("webRTC-signaling", data);
+    }
+  });
+  //===========================================================================================//
+
   //=============================== DISCONNECT FROM SOCKET.IO =================================//
   // Disconnect to socket.io when the browser closes //
   socket.on("disconnect", () => {

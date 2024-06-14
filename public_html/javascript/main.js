@@ -10,6 +10,10 @@ wss.registerSocketEvent(socket);
 //===============================================================================//
 
 //===============================================================================//
+webRTChandler.getLocalPreview();
+//===============================================================================//
+
+//===============================================================================//
 // CACHE THE THE BUTTON TO STORE the socket.io ID
 const personalCodeCopyButton = document.getElementById(
   "personal_code_copy_button"

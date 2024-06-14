@@ -1,6 +1,7 @@
 import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as ui from "./ui.js";
+import * as constant from "./constant.js";
 //======================================================================================//
 
 //======================================================================================//
@@ -38,6 +39,25 @@ export const registerSocketEvent = (socket) => {
     webRTChandler.handlePreOfferAnswer(data);
   });
   //------------------------------------------------------------------------------------//
+
+  //------------------------------------------------------------------------------------//
+  socket.on("webRTC-signaling", (data) => {
+    // webRTChandler.handlePreOfferAnswer(data);
+    switch (data.type) {
+      case constant.webRTCSignaling.OFFER:
+        webRTChandler.handleWebRTCOffer(data);
+        break;
+      case constant.webRTCSignaling.ANSWER:
+        webRTChandler.handleWebRTCAnswer(data);
+        break;
+      case constant.webRTCSignaling.ICE_CANDIDATE:
+        webRTChandler.handleWebRTCCandidate(data);
+        break;
+      default:
+        return;
+    }
+  });
+  //------------------------------------------------------------------------------------//
 };
 //======================================================================================//
 
@@ -58,5 +78,11 @@ export const sendPreOfferAnswer = (data) => {
   // console.log(`Emmitting pre-offer-answer ${preOfferAnswer} ${callerSocketID}`);
   // Emmitting a event "pre-offer-answer" and passing the video or chat call type data
   socketIO.emit("pre-offer-answer", data);
+};
+//======================================================================================//
+
+//======================================================================================//
+export const sendDataUsingWebRTCSignaling = (data) => {
+  socketIO.emit("webRTC-signaling", data);
 };
 //======================================================================================//
