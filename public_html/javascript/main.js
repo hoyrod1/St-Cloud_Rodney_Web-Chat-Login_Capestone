@@ -2,6 +2,7 @@ import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as constant from "./constant.js";
 import * as wss from "./wss.js";
+import * as ui from "./ui.js";
 // import { getIncomingCallDialog } from "./elements.js";
 //========================= CONNECT USING SOCKET.IO =============================//
 // INITIALIZE SOCKET.IO AND ESTABLISH THE CONNECTION TO SOCKET.IO SERVER
@@ -50,6 +51,51 @@ personalCodeVideoButton.addEventListener("click", (e) => {
   const videoCallType = constant.callType.VIDEO_PERSONAL_CODE;
   webRTChandler.sendPreOffer(videoCallType, sendPersonalId);
 });
+//===============================================================================//
+
+//======================= Event listnerers for video call =======================//
+//------------------------ enable and diable the mic ----------------------------//
+// Cache the mic button
+const micButton = document.getElementById("mic_button");
+// Check if button is clicked
+micButton.addEventListener("click", (e) => {
+  // Cache the state of the local stream
+  const localStream = store.getState().localStream;
+  // Cache the local streams audio track
+  // If mic is enabled return value is true
+  const micEnabled = localStream.getAudioTracks()[0].enabled;
+  // If mic is not enabled the return value is false
+  localStream.getAudioTracks()[0].enabled = !micEnabled;
+  ui.updateMicButton(micEnabled);
+});
+//------------------------ enable and diable the video ---------------------------//
+// Cache the video button
+const cameraButton = document.getElementById("camera_button");
+// Check if video is clicked
+cameraButton.addEventListener("click", (e) => {
+  // Cache the state of the local stream
+  const localStream = store.getState().localStream;
+  // Cache the local video streams
+  // If video is enabled return value is true
+  const videoEnabled = localStream.getVideoTracks()[0].enabled;
+  // If mic is not enabled the return value is false
+  localStream.getVideoTracks()[0].enabled = !videoEnabled;
+  ui.updateCameraButton(videoEnabled);
+});
+//-------------------- enable and Screening Sharing Button -----------------------//
+// // Cache the video button
+// const switchForScreeningSharingButton = document.getElementById("camera_button");
+// // Check if video is clicked
+// cameraButton.addEventListener("click", (e) => {
+//   // Cache the state of the local stream
+//   const localStream = store.getState().localStream;
+//   // Cache the local video streams
+//   // If video is enabled return value is true
+//   const videoEnabled = localStream.getVideoTracks()[0].enabled;
+//   // If mic is not enabled the return value is false
+//   localStream.getVideoTracks()[0].enabled = !videoEnabled;
+//   ui.updateCameraButton(videoEnabled);
+// });
 //===============================================================================//
 
 //===============================================================================//

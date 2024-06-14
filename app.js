@@ -102,7 +102,7 @@ socketIo.on("connection", (socket) => {
   //===========================================================================================//
 
   //============================== EMIT RTC EVENT ================================//
-  // Emit the socket.io wenRTC-signaling event
+  // Emit the socket.io webRTC-signaling event
   socket.on("webRTC-signaling", (data) => {
     const { connectedUserSocketId } = data;
 
