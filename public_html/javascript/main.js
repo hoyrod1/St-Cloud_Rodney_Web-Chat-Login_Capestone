@@ -57,7 +57,7 @@ personalCodeVideoButton.addEventListener("click", (e) => {
 //------------------------ enable and diable the mic ----------------------------//
 // Cache the mic button
 const micButton = document.getElementById("mic_button");
-// Check if button is clicked
+// Check if mic button is clicked
 micButton.addEventListener("click", (e) => {
   // Cache the state of the local stream
   const localStream = store.getState().localStream;
@@ -71,7 +71,7 @@ micButton.addEventListener("click", (e) => {
 //------------------------ enable and diable the video ---------------------------//
 // Cache the video button
 const cameraButton = document.getElementById("camera_button");
-// Check if video is clicked
+// Check if video button is clicked
 cameraButton.addEventListener("click", (e) => {
   // Cache the state of the local stream
   const localStream = store.getState().localStream;
@@ -83,19 +83,18 @@ cameraButton.addEventListener("click", (e) => {
   ui.updateCameraButton(videoEnabled);
 });
 //-------------------- enable and Screening Sharing Button -----------------------//
-// // Cache the video button
-// const switchForScreeningSharingButton = document.getElementById("camera_button");
-// // Check if video is clicked
-// cameraButton.addEventListener("click", (e) => {
-//   // Cache the state of the local stream
-//   const localStream = store.getState().localStream;
-//   // Cache the local video streams
-//   // If video is enabled return value is true
-//   const videoEnabled = localStream.getVideoTracks()[0].enabled;
-//   // If mic is not enabled the return value is false
-//   localStream.getVideoTracks()[0].enabled = !videoEnabled;
-//   ui.updateCameraButton(videoEnabled);
-// });
+// Cache the video sharing button
+const switchForScreeningSharingButton = document.getElementById(
+  "screen_sharing_button"
+);
+// Check if video sharing button is clicked
+switchForScreeningSharingButton.addEventListener("click", (e) => {
+  // Cache the state of the video sharing which is defined in store.js
+  const screenSharingActive = store.getState().screenSharingActive;
+  // Pass the state of the video sharing to the
+  // switchBetweenCameraAndScreeningSharing() function
+  webRTChandler.switchBetweenCameraAndScreeningSharing(screenSharingActive);
+});
 //===============================================================================//
 
 //===============================================================================//

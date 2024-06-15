@@ -249,3 +249,75 @@ export const handleWebRTCCandidate = async (data) => {
   }
 };
 //===============================================================================//
+
+//===============================================================================//
+//-------------------------------------------------------------------------------//
+let screenSharingStream;
+//-------------------------------------------------------------------------------//
+export const switchBetweenCameraAndScreeningSharing = async (
+  screenSharingActive
+) => {
+  if (screenSharingActive) {
+    //--------------------- Disable screen sharing ---------------------//
+    // Cache the local stream that will display the video
+    const localStream = store.getState().localStream;
+    const senders = peerConnection.getSenders();
+    // Get the specific senders video and audio track
+    const sender = senders.find((sender) => {
+      // Checking if the senders video and audio track is the same as
+      // as the sharing audio and video track
+      return sender.track.kind === localStream.getVideoTracks()[0].kind;
+    });
+    // If sender is found the video and audio track is replaced
+    // Video sharing track
+    if (sender) {
+      sender.replaceTrack(localStream.getVideoTracks()[0]);
+    }
+    // Stop sharing stream
+    store
+      .getState()
+      .screenSharingStream.getTracks()
+      .forEach((track) => track.stop());
+    // This will store Video sharing track
+    // the (!) before "screenSharingActive" is necessary
+    // to toggle between the screen sharing boolean state
+    store.setScreenSharingActive(!screenSharingActive);
+    // This updates the ui with the video screen
+    ui.updateLocalVideo(localStream);
+  } else {
+    //---------------------- Enable screen sharing ----------------------//
+    console.log(`Enable screen sharing`);
+    try {
+      // The getDisplayMedia() gets access to screen sharing screen
+      screenSharingStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+      // Setting the screen sharing state
+      store.setScreenSharingStream(screenSharingStream);
+      // Replace the audio and video track from the sender
+      const senders = peerConnection.getSenders();
+      // Get the specific senders video and audio track
+      const sender = senders.find((sender) => {
+        // Checking if the senders video and audio track is the same as
+        // as the sharing audio and video track
+        return (
+          sender.track.kind === screenSharingStream.getVideoTracks()[0].kind
+        );
+      });
+      // If sender is found the video and audio track is replaced
+      // Video sharing track
+      if (sender) {
+        sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
+      }
+      // This will store Video sharing track
+      // the (!) before "screenSharingActive" is necessary
+      // to toggle between the screen sharing boolean state
+      store.setScreenSharingActive(!screenSharingActive);
+      // This updates the ui with the video sharing screen
+      ui.updateLocalVideo(screenSharingStream);
+    } catch (error) {
+      console.error("There was an error sharing the screen", error);
+    }
+  }
+};
+//===============================================================================//
