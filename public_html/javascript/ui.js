@@ -188,6 +188,25 @@ export const updateCameraButton = (cameraActive) => {
 };
 //============================================================================//
 
+//================================ UI MESSAGES ===============================//
+// Display message
+export const appendMessage = (message, right = false) => {
+  const messageContainer = document.getElementById("message_container");
+
+  const messageElement = right
+    ? elements.getRightMessage(message)
+    : elements.getLeftMessage(message);
+  console.log(messageContainer);
+  messageContainer.appendChild(messageElement);
+};
+//----------------------------------------------------------------------------//
+// Remove messages
+export const clearMessenger = () => {
+  const messageContainer = document.getElementById("message_container");
+  messageContainer.querySelectorAll("*");
+};
+//============================================================================//
+
 //======================== UI HELPER FUNCTIONS ===============================//
 const enableDashboard = () => {
   // Cache dashboard blocker div to enable blur

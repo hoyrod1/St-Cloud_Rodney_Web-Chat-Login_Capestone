@@ -96,6 +96,31 @@ switchForScreeningSharingButton.addEventListener("click", (e) => {
   webRTChandler.switchBetweenCameraAndScreeningSharing(screenSharingActive);
 });
 //===============================================================================//
+//===============================================================================//
+
+//====================== Event listnerers for chat message ======================//
+// Caching the chat input
+const newMessageInput = document.getElementById("new_message_input");
+newMessageInput.addEventListener("keydown", (e) => {
+  // console.log("Key was pressed");
+  const key = e.key;
+  console.log(e.target.value);
+  if (key === "Enter") {
+    webRTChandler.sendMessageUsingDataChannel(e.target.value);
+    ui.appendMessage(e.target.value, true);
+    newMessageInput.value = "";
+  }
+});
+//------------------------- Send message from the input -------------------------//
+// Caching the chat input
+const sendMessageButton = document.getElementById("send_message_button");
+sendMessageButton.addEventListener("click", (e) => {
+  const message = newMessageInput.value;
+  webRTChandler.sendMessageUsingDataChannel(message);
+  ui.appendMessage(message, true);
+  newMessageInput.value = "";
+});
+//===============================================================================//
 
 //===============================================================================//
 // getIncomingCallDialog(

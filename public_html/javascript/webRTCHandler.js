@@ -7,6 +7,8 @@ import * as store from "./store.js";
 // TO CACHE/STORE THE CONNECTED USERS CONNECTION DETAILS
 let connectedUsersDetail;
 let peerConnection;
+// Initializing data channel event listener
+let dataChannel;
 //===============================================================================//
 
 //===============================================================================//
@@ -41,6 +43,23 @@ export const getLocalPreview = () => {
 const createPeerConnection = () => {
   // Defining RTCPeerConnection Object
   peerConnection = new RTCPeerConnection(configuration);
+  // Caching message from the chat
+  dataChannel = peerConnection.createDataChannel("chat");
+  // Check for event from datachannel
+  peerConnection.ondatachannel = (event) => {
+    const dataChannel = event.channel;
+    // Check if data channel is open
+    dataChannel.onopen = () => {
+      console.log("Peer connection is ready to recieve data channel message");
+    };
+    // When the message is received it is passed with the event and converted to JSON
+    dataChannel.onmessage = (event) => {
+      console.log("Message came from data channel");
+      const message = JSON.parse(event.data);
+      console.log(message);
+      ui.appendMessage(message);
+    };
+  };
 
   peerConnection.onicecandidate = (event) => {
     console.log(`Receiving ice candidate from stun server with the event:`);
@@ -81,6 +100,14 @@ const createPeerConnection = () => {
     }
   }
 };
+//===============================================================================//
+export const sendMessageUsingDataChannel = (message) => {
+  // Converting the message from the data channel to strings
+  const stringifiedMessage = JSON.stringify(message);
+  dataChannel.send(stringifiedMessage);
+};
+//===============================================================================//
+
 //===============================================================================//
 
 //===============================================================================//
