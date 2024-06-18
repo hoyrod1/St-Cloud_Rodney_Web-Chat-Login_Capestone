@@ -207,6 +207,32 @@ export const clearMessenger = () => {
 };
 //============================================================================//
 
+//============================================================================//
+// UI FOR RECORDING //
+export const showRecordingPanel = () => {
+  const recordingButtons = document.getElementById("video_recording_buttons");
+  // Show vido recording button
+  showElement(recordingButtons);
+  // Hide the recording button if video is being recording
+  const startRecordingButton = document.getElementById(
+    "start_recording_button"
+  );
+  hideElement(startRecordingButton);
+};
+//----------------------------------------------------------------------------//
+// Reset the recording button //
+export const resetRecordingButton = () => {
+  const startRecordingButton = document.getElementById(
+    "start_recording_button"
+  );
+  // Show start video recording button
+  showElement(startRecordingButton);
+  const recordingButtons = document.getElementById("video_recording_buttons");
+  // Hide video recording button
+  hideElement(recordingButtons);
+};
+//============================================================================//
+
 //======================== UI HELPER FUNCTIONS ===============================//
 const enableDashboard = () => {
   // Cache dashboard blocker div to enable blur

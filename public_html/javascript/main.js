@@ -2,6 +2,7 @@ import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as constant from "./constant.js";
 import * as wss from "./wss.js";
+import * as recordingUtils from "./recordingUtils";
 import * as ui from "./ui.js";
 // import { getIncomingCallDialog } from "./elements.js";
 //========================= CONNECT USING SOCKET.IO =============================//
@@ -119,6 +120,21 @@ sendMessageButton.addEventListener("click", (e) => {
   webRTChandler.sendMessageUsingDataChannel(message);
   ui.appendMessage(message, true);
   newMessageInput.value = "";
+});
+//===============================================================================//
+
+//===============================================================================//
+// Handle Recording Button //
+const startRecordingButton = document.getElementById("start_recording_button");
+startRecordingButton.addEventListener("click", (e) => {
+  recordingUtils.startRecording();
+  ui.showRecordingPanel();
+});
+// Handle Stop Recording Button //
+const stopRecordingButton = document.getElementById("stop_recording_button");
+stopRecordingButton.addEventListener("click", (e) => {
+  recordingUtils.stopRecording();
+  ui.resetRecordingButton();
 });
 //===============================================================================//
 
