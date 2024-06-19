@@ -38,7 +38,7 @@ export const pauseRecording = () => {
 
 //====================== Handle Resuming Video Recording ======================//
 export const resumeRecording = () => {
-  mediaRecorder.resumeRecording();
+  mediaRecorder.resume();
 };
 //=============================================================================//
 
@@ -57,10 +57,10 @@ const downloadRecordedVideo = () => {
   const url = URL.createObjectURL(blob);
   const aTag = document.createElement("a");
   document.body.appendChild(aTag);
-  a.href = url;
+  aTag.href = url;
   aTag.style = "display: none;";
-  a.download = "recording.webm";
-  a.click();
+  aTag.download = "recording.webm";
+  aTag.click();
   window.URL.revokeObjectURL(url);
 };
 //===============================================================================//

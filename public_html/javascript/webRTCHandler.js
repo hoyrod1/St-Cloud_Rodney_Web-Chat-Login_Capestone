@@ -348,3 +348,41 @@ export const switchBetweenCameraAndScreeningSharing = async (
   }
 };
 //===============================================================================//
+
+//===============================================================================//
+// Hang up video and chat call
+export const handleHangUp = () => {
+  const data = {
+    connectedUserSocketId: connectedUsersDetail.socketId,
+  };
+  wss.sendUserHangedUp(data);
+  closePeerConnectionAndResetState();
+};
+//===============================================================================//
+
+//===============================================================================//
+export const handleConnectedUserHangsUp = () => {
+  closePeerConnectionAndResetState();
+};
+//===============================================================================//
+
+//===============================================================================//
+// Complete the hang up closing peer connection
+const closePeerConnectionAndResetState = () => {
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+  // Check for active camera and mic
+  if (
+    connectedUsersDetail.callType === constant.callType.VIDEO_PERSONAL_CODE ||
+    connectedUsersDetail.callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
+    store.getState().localStream.getVideoTracks()[0].enable = true;
+    store.getState().localStream.getAudioTracks()[0].enable = true;
+
+    ui.updateUIAfterHangup(connectedUsersDetail.callType);
+    connectedUsersDetail = null;
+  }
+};
+//===============================================================================//

@@ -2,7 +2,7 @@ import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as constant from "./constant.js";
 import * as wss from "./wss.js";
-import * as recordingUtils from "./recordingUtils";
+import * as recordingUtils from "./recordingUtils.js";
 import * as ui from "./ui.js";
 // import { getIncomingCallDialog } from "./elements.js";
 //========================= CONNECT USING SOCKET.IO =============================//
@@ -105,7 +105,7 @@ const newMessageInput = document.getElementById("new_message_input");
 newMessageInput.addEventListener("keydown", (e) => {
   // console.log("Key was pressed");
   const key = e.key;
-  console.log(e.target.value);
+  // console.log(e.target.value);
   if (key === "Enter") {
     webRTChandler.sendMessageUsingDataChannel(e.target.value);
     ui.appendMessage(e.target.value, true);
@@ -124,17 +124,50 @@ sendMessageButton.addEventListener("click", (e) => {
 //===============================================================================//
 
 //===============================================================================//
-// Handle Recording Button //
+//--------------------------- Handle Recording Button ---------------------------//
 const startRecordingButton = document.getElementById("start_recording_button");
 startRecordingButton.addEventListener("click", (e) => {
   recordingUtils.startRecording();
   ui.showRecordingPanel();
 });
-// Handle Stop Recording Button //
+//------------------------- Handle Stop Recording Button -------------------------//
 const stopRecordingButton = document.getElementById("stop_recording_button");
 stopRecordingButton.addEventListener("click", (e) => {
   recordingUtils.stopRecording();
   ui.resetRecordingButton();
+});
+//------------------------ Handle Pause Recording Button ------------------------//
+const pauseRecordingButton = document.getElementById("pause_recording_button");
+pauseRecordingButton.addEventListener("click", (e) => {
+  recordingUtils.pauseRecording();
+  ui.switchRecordingButtons(true);
+});
+//------------------------ Handle Resume Recording Button ------------------------//
+const resumeRecordingButton = document.getElementById(
+  "resume_recording_button"
+);
+
+resumeRecordingButton.addEventListener("click", (e) => {
+  recordingUtils.resumeRecording();
+  ui.switchRecordingButtons(false);
+});
+//===============================================================================//
+
+//===============================================================================//
+// Hangup Video Call Button
+const hangUpButton = document.getElementById("hang_up_button");
+
+hangUpButton.addEventListener("click", (e) => {
+  webRTChandler.handleHangUp();
+});
+//===============================================================================//
+
+//===============================================================================//
+// Hangup Chat Call Button
+const hangChatButton = document.getElementById("finish_chat_call_button");
+
+hangChatButton.addEventListener("click", (e) => {
+  webRTChandler.handleHangUp();
 });
 //===============================================================================//
 

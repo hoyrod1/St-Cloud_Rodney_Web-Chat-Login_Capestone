@@ -116,6 +116,21 @@ socketIo.on("connection", (socket) => {
   });
   //===========================================================================================//
 
+  //===========================================================================================//
+  // Listening for the hang up event
+  socket.on("user-hanged-up", (data) => {
+    const { connectedUserSocketId } = data;
+
+    const connectedUser = connectedUsers.find(
+      (userSocketId) => userSocketId === connectedUserSocketId
+    );
+    // console.log(connectedUser);
+    if (connectedUser) {
+      socketIo.to(connectedUserSocketId).emit("user-hanged-up");
+    }
+  });
+  //===========================================================================================//
+
   //=============================== DISCONNECT FROM SOCKET.IO =================================//
   // Disconnect to socket.io when the browser closes //
   socket.on("disconnect", () => {

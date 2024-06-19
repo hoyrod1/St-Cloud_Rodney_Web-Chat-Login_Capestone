@@ -196,19 +196,20 @@ export const appendMessage = (message, right = false) => {
   const messageElement = right
     ? elements.getRightMessage(message)
     : elements.getLeftMessage(message);
-  console.log(messageContainer);
+  // console.log(messageContainer);
   messageContainer.appendChild(messageElement);
 };
 //----------------------------------------------------------------------------//
 // Remove messages
 export const clearMessenger = () => {
   const messageContainer = document.getElementById("message_container");
-  messageContainer.querySelectorAll("*");
+  messageContainer.querySelectorAll("*").forEach((message) => {
+    message.remove();
+  });
 };
 //============================================================================//
 
-//============================================================================//
-// UI FOR RECORDING //
+//============================= UI FOR RECORDING =============================//
 export const showRecordingPanel = () => {
   const recordingButtons = document.getElementById("video_recording_buttons");
   // Show vido recording button
@@ -230,6 +231,58 @@ export const resetRecordingButton = () => {
   const recordingButtons = document.getElementById("video_recording_buttons");
   // Hide video recording button
   hideElement(recordingButtons);
+};
+//----------------------------------------------------------------------------//
+// Pause the recording button //
+export const switchRecordingButtons = (switchForResumingButton = false) => {
+  const resumeButton = document.getElementById("resume_recording_button");
+  const pauseButton = document.getElementById("pause_recording_button");
+
+  if (switchForResumingButton) {
+    // Hide pause video button if the video is paused
+    hideElement(pauseButton);
+    // Show resume video record button if the video is paused
+    showElement(resumeButton);
+  } else {
+    // Hide resume video button if the video is being recorded
+    hideElement(resumeButton);
+    // Show pause video record if the video is being recorded
+    showElement(pauseButton);
+  }
+};
+//============================================================================//
+
+//============================================================================//
+// UI After Hang Up
+export const updateUIAfterHangup = (callType) => {
+  enableDashboard();
+
+  // HIDE THE CALL BUTTONS
+  if (
+    callType === constant.callType.VIDEO_PERSONAL_CODE ||
+    callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
+    const callButtons = document.getElementById("call_buttons");
+    hideElement(callButtons);
+  } else {
+    const chatCallButton = document.getElementById("finish_chat_call_button");
+    hideElement(chatCallButton);
+  }
+
+  // Hide message input
+  const newMessageInput = document.getElementById("new_message");
+  hideElement(newMessageInput);
+  clearMessenger();
+  // Update mic button
+  updateMicButton(false);
+  updateCameraButton(false);
+  // Hide remote video and show placeholder
+  const remoteVideo = document.getElementById("remote_video");
+  hideElement(remoteVideo);
+  const placeholder = document.getElementById("video_placeholder");
+  showElement(placeholder);
+  // Remove chat dialogs
+  removeAllDialog();
 };
 //============================================================================//
 
