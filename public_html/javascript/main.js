@@ -29,13 +29,13 @@ personalCodeCopyButton.addEventListener("click", (e) => {
 //===============================================================================//
 
 //===============================================================================//
-// CACHE THE CHAT BUTTON TO STORE THE CHAT ID
-const personalCodeChatButton = document.getElementById(
-  "personal_code_chat_button"
-);
 // CACHE THE VIDEO BUTTON TO STORE THE VIDEO ID
 const personalCodeVideoButton = document.getElementById(
   "personal_code_video_button"
+);
+// CACHE THE CHAT BUTTON TO STORE THE CHAT ID
+const personalCodeChatButton = document.getElementById(
+  "personal_code_chat_button"
 );
 //------------------------------------------------------------------------------//
 // Attached a addeventListener for chat button
@@ -52,6 +52,16 @@ personalCodeVideoButton.addEventListener("click", (e) => {
   const videoCallType = constant.callType.VIDEO_PERSONAL_CODE;
   webRTChandler.sendPreOffer(videoCallType, sendPersonalId);
 });
+//===============================================================================//
+
+//===============================================================================//
+// // CACHE THE STRANGERS VIDEO BUTTON TO STORE THE VIDEO ID
+const strangerVideoButton = document.getElementById("stranger_video_button");
+// CACHE THE STRANGERS CHAT BUTTON TO STORE THE CHAT ID
+const strangerChatButton = document.getElementById("stranger_chat_button");
+//-------------------------------------------------------------------------------//
+strangerVideoButton.addEventListener("click", (e) => {});
+strangerChatButton.addEventListener("click", (e) => {});
 //===============================================================================//
 
 //======================= Event listnerers for video call =======================//
@@ -164,9 +174,9 @@ hangUpButton.addEventListener("click", (e) => {
 
 //===============================================================================//
 // Hangup Chat Call Button
-const hangChatButton = document.getElementById("finish_chat_call_button");
+const hangUpChatButton = document.getElementById("finish_chat_call_button");
 
-hangChatButton.addEventListener("click", (e) => {
+hangUpChatButton.addEventListener("click", (e) => {
   webRTChandler.handleHangUp();
 });
 //===============================================================================//

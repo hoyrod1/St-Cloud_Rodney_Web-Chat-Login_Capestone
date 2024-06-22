@@ -6,6 +6,8 @@ import * as store from "./store.js";
 // INITIALIAZING THE connectedUsersDetail VARIABLE
 // TO CACHE/STORE THE CONNECTED USERS CONNECTION DETAILS
 let connectedUsersDetail;
+// INITIALIAZING THE peerConnection VARIABLE
+// TO CACHE/STORE THE RECIEVERS CONNECTION DETAILS
 let peerConnection;
 // Initializing data channel event listener
 let dataChannel;
@@ -25,12 +27,16 @@ const configuration = {
     },
   ],
 };
+//===============================================================================//
 
+//===============================================================================//
 export const getLocalPreview = () => {
   navigator.mediaDevices
     .getUserMedia(defaultConstraints)
     .then((stream) => {
       ui.updateLocalVideo(stream);
+      ui.showVideoCallButtons();
+      store.setCallState(constant.callSate.CALL_AVAILABLE);
       store.setLocalStream(stream);
     })
     .catch((error) => {
@@ -54,9 +60,9 @@ const createPeerConnection = () => {
     };
     // When the message is received it is passed with the event and converted to JSON
     dataChannel.onmessage = (event) => {
-      console.log("Message came from data channel");
+      // console.log("Message came from data channel");
       const message = JSON.parse(event.data);
-      console.log(message);
+      // console.log(message);
       ui.appendMessage(message);
     };
   };
@@ -128,6 +134,9 @@ export const sendPreOffer = (callType, sendPersonalId) => {
     };
     // Calling the showIncomingCallDialog to render the reject incoming call dialog div
     ui.receivingCallDialog(callingDialogRejectCallHandler);
+    // This sets the call state for the receiving caller to unavailable
+    // When reciving caller is on a video chat call already
+    store.setCallState(constant.callSate.CALL_UNAVAILABLE);
     // Calling sendPreOffer() from the wss.js file
     // And passing the sendingData object containing
     // The call type(Video or Chat) and the socket.io ID
@@ -140,12 +149,25 @@ export const sendPreOffer = (callType, sendPersonalId) => {
 export const handlePreOffer = (data) => {
   // Destructure the data object containing the call type and the sockt.io ID
   const { callerSocketId, callType } = data;
+  // Check to see if recieving caller is not on available
+  // If unavailable set pre offer answer to CALL_UNAVAILABLE
+  if (!checkCallPossibility()) {
+    return sendingPreOfferAnswer(
+      constant.preOfferAnswer.CALL_UNAVAILABLE,
+      callerSocketId
+    );
+  }
 
   connectedUsersDetail = {
     socketId: callerSocketId,
     callType,
   };
 
+  // This sets the call state for the receiving caller to unavailable
+  // When reciving caller is on a video chat call already
+  store.setCallState(constant.callSate.CALL_UNAVAILABLE);
+
+  // If receiving caller is available show incoming call or chat dialog
   if (
     callType === constant.callType.CHAT_PERSONAL_CODE ||
     callType === constant.callType.VIDEO_PERSONAL_CODE
@@ -171,6 +193,8 @@ const rejectCallHandler = () => {
   console.log(
     `Call Handler ${constant.preOfferAnswer.CALL_REJECTED} from ${connectedUsersDetail.socketId}`
   );
+  sendingPreOfferAnswer();
+  setIncomingCallsAvailable();
   sendingPreOfferAnswer(constant.preOfferAnswer.CALL_REJECTED);
 };
 //===============================================================================//
@@ -178,15 +202,24 @@ const rejectCallHandler = () => {
 //===============================================================================//
 const callingDialogRejectCallHandler = () => {
   console.log("Reject Calling Handler");
+  const data = {
+    connectedUserSocketId: connectedUsersDetail.socketId,
+  };
+  closePeerConnectionAndResetState();
+
+  wss.sendUserHangedUp(data);
 };
 //===============================================================================//
 
 //===============================================================================//
 // THIS FUNCTION SENDS A OBJECT WITH THE CONNECTED RECEIVERS USERS socket.io ID
 // AND THE RECIEVERS ANSWER DECISION "CALL_ACCEPTED" OR "CALL_REJECTED"
-const sendingPreOfferAnswer = (preOfferAnswer) => {
+const sendingPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
+  const callSoketId = callerSocketId
+    ? callerSocketId
+    : connectedUsersDetail.socketId;
   const data = {
-    callerSocketID: connectedUsersDetail.socketId,
+    callerSocketID: callSoketId,
     preOfferAnswer,
   };
   console.log("Sending Pre-Offer Handler");
@@ -198,23 +231,32 @@ const sendingPreOfferAnswer = (preOfferAnswer) => {
 //===============================================================================//
 export const handlePreOfferAnswer = (data) => {
   const { preOfferAnswer } = data;
-  console.log(data);
-  console.log(`This call is ${preOfferAnswer}`);
+  // console.log(data);
+  // console.log(`This call is ${preOfferAnswer}`);
   ui.removeAllDialog();
 
   if (preOfferAnswer === constant.preOfferAnswer.CALLEE_NOT_FOUND) {
     // Show dialog that callee has not been found
     ui.showInfoDialog(preOfferAnswer);
+    // This function sets the call state for the receiving caller to available
+    // When reciving caller is not on a video chat call already
+    setIncomingCallsAvailable();
   }
 
   if (preOfferAnswer === constant.preOfferAnswer.CALL_UNAVAILABLE) {
     // Show dialog that callee has not available
     ui.showInfoDialog(preOfferAnswer);
+    // This sets the call state for the receiving caller to available
+    // When reciving caller is not on a video chat call already
+    setIncomingCallsAvailable();
   }
 
   if (preOfferAnswer === constant.preOfferAnswer.CALL_REJECTED) {
     // Show dialog that call was rejected
     ui.showInfoDialog(preOfferAnswer);
+    // This sets the call state for the receiving caller to available
+    // When reciving caller is not on a video chat call already
+    setIncomingCallsAvailable();
   }
 
   if (preOfferAnswer === constant.preOfferAnswer.CALL_ACCEPTED) {
@@ -228,7 +270,7 @@ export const handlePreOfferAnswer = (data) => {
 //===============================================================================//
 
 //===============================================================================//
-// Sending offer with SDP info from caller with to the receiving caller
+// Sending offer with SDP info from caller to the receiving caller
 const sendWebRTCOffer = async () => {
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(offer);
@@ -380,9 +422,42 @@ const closePeerConnectionAndResetState = () => {
   ) {
     store.getState().localStream.getVideoTracks()[0].enable = true;
     store.getState().localStream.getAudioTracks()[0].enable = true;
-
-    ui.updateUIAfterHangup(connectedUsersDetail.callType);
-    connectedUsersDetail = null;
   }
+  // Set the call state to available to receive video and or chat calls
+  ui.updateUIAfterHangup(connectedUsersDetail.callType);
+  setIncomingCallsAvailable();
+  connectedUsersDetail = null;
 };
 //===============================================================================//
+
+//============================================================================//
+export const checkCallPossibility = (callType) => {
+  const callState = store.getState().callState;
+  if (callState === constant.callSate.CALL_AVAILABLE) {
+    // If the receiving caller is available for video call return true
+    return true;
+  }
+
+  if (
+    (callType === constant.callType.VIDEO_PERSONAL_CODE ||
+      callType === constant.callType.VIDEO_STRANGERL_CODE) &&
+    callState === constant.callSate.CALL_AVAILABLE_ONLY_CHAT
+  ) {
+    // If the receiving caller is not available for video call return false
+    return false;
+  }
+  // If the receiving caller is not available for any call type return false
+  return false;
+};
+//============================================================================//
+
+//============================================================================//
+const setIncomingCallsAvailable = () => {
+  const localStream = store.getState().localStream;
+  if (localStream) {
+    store.setCallState(constant.callSate.CALL_AVAILABLE);
+  } else {
+    store.setCallState(constant.callSate.CALL_AVAILABLE_ONLY_CHAT);
+  }
+};
+//============================================================================//

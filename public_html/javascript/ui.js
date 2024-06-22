@@ -27,6 +27,17 @@ export const updateLocalVideo = (stream) => {
 //============================================================================//
 
 //============================================================================//
+export const showVideoCallButtons = () => {
+  const personalCodeVideoButton = document.getElementById(
+    "personal_code_video_button"
+  );
+  const strangerVideoButton = document.getElementById("stranger_video_button");
+  showElement(personalCodeVideoButton);
+  showElement(strangerVideoButton);
+};
+//============================================================================//
+
+//============================================================================//
 export const updateRemoteVideo = (stream) => {
   const remoteVideo = document.getElementById("remote_video");
   remoteVideo.srcObject = stream;
@@ -253,7 +264,7 @@ export const switchRecordingButtons = (switchForResumingButton = false) => {
 //============================================================================//
 
 //============================================================================//
-// UI After Hang Up
+// UI To Hang Up Video And Message Chat
 export const updateUIAfterHangup = (callType) => {
   enableDashboard();
 

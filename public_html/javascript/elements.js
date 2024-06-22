@@ -1,6 +1,8 @@
 //============================================================================//
 //--------- This file will be managing the user call dialog interface --------//
 //============================================================================//
+
+//****************************************************************************//
 export const getIncomingCallDialog = (
   callTypeInfo,
   acceptCallHandler,
@@ -88,7 +90,9 @@ export const getIncomingCallDialog = (
   return dialogDivWrap;
   //----------------------------------------------------//
 };
+//****************************************************************************//
 
+//****************************************************************************//
 export const receivedCallDialog = (rejectCallHandler) => {
   // console.log("Recieved incoming call dialog!!!");
   //----------------------------------------------------//
@@ -123,22 +127,26 @@ export const receivedCallDialog = (rejectCallHandler) => {
   rejectCallImg.classList.add("dialog_button_image");
   const rejectCallImgPath = "./utilities/test-images/rejectCall.png";
   rejectCallImg.src = rejectCallImgPath;
-  rejectCallButton.appendChild(rejectCallImg);
+  rejectCallButton.append(rejectCallImg);
   //====================================================//
   buttonContainerDiv.appendChild(rejectCallButton);
   //====================================================//
   dialogContentDiv.appendChild(title);
   dialogContentDiv.appendChild(imageContainerDiv);
+  dialogContentDiv.appendChild(buttonContainerDiv);
   //====================================================//
   dialogDivWrap.appendChild(dialogContentDiv);
   //====================================================//
+  rejectCallButton.addEventListener("click", (e) => {
+    rejectCallHandler();
+  });
   //----------------------------------------------------//
   return dialogDivWrap;
   //----------------------------------------------------//
 };
-//============================================================================//
+//****************************************************************************//
 
-//============================================================================//
+//****************************************************************************//
 export const getInfoDialog = (dialogTitle, descriptionText) => {
   //----------------------------------------------------//
   const dialogDivWrap = document.createElement("div");
@@ -177,9 +185,9 @@ export const getInfoDialog = (dialogTitle, descriptionText) => {
   return dialogDivWrap;
   //----------------------------------------------------//
 };
-//============================================================================//
+//****************************************************************************//
 
-//============================================================================//
+//****************************************************************************//
 export const getLeftMessage = (message) => {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message_left_container");
@@ -198,4 +206,4 @@ export const getRightMessage = (message) => {
   messageContainer.appendChild(messageParagraph);
   return messageContainer;
 };
-//============================================================================//
+//****************************************************************************//
