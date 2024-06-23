@@ -84,23 +84,39 @@ export const receivingCallDialog = (rejectCallHandler) => {
 };
 //============================================================================//
 
+//============== LOGIC TO SHOW STRANGER CALLEE IS NOT AVAILABLE ==============//
+export const showNoStrangerAvailableDialog = () => {
+  const infoDialog = elements.getInfoDialog(
+    "Stranger is unavailable",
+    "Please try again later"
+  );
+  //--------------------------------------------------------------------------//
+  // Remove dialog after 5 seconds
+  if (infoDialog) {
+    const dialog = document.getElementById("dialog");
+    dialog.appendChild(infoDialog);
+    // set time for dialog to be removed from page
+    setTimeout(() => {
+      removeAllDialog();
+    }, 5000);
+  }
+};
 //============================================================================//
+
+//============ LOGIC TO SHOW CALLER THAT CALLEE IS NOT AVAILABLE =============//
 export const showInfoDialog = (preOfferAnswer) => {
   let infoDialog = null;
 
   if (preOfferAnswer === constant.preOfferAnswer.CALL_REJECTED) {
     // Show dialog that call was rejected
-    infoDialog = elements.getInfoDialog(
-      "Call Rejected",
-      "Caller Rejected Your Call"
-    );
+    infoDialog = elements.getInfoDialog("Call Rejected", "Caller is busy");
   }
 
   if (preOfferAnswer === constant.preOfferAnswer.CALLEE_NOT_FOUND) {
     // Show dialog that callee has not been found
     infoDialog = elements.getInfoDialog(
-      "Caller ID Not Found",
-      "Please check you personal code"
+      "Caller is not available",
+      "Please check you contact code"
     );
   }
 
@@ -108,10 +124,11 @@ export const showInfoDialog = (preOfferAnswer) => {
     // Show dialog that callee has not available
     infoDialog = elements.getInfoDialog(
       "Call unavailable",
-      "Caller is busy, please try again later"
+      "Caller is unavailable, please try again later"
     );
   }
   //--------------------------------------------------------------------------//
+  // Remove dialog after 5 seconds
   if (infoDialog) {
     const dialog = document.getElementById("dialog");
     dialog.appendChild(infoDialog);
@@ -136,12 +153,18 @@ export const removeAllDialog = () => {
 
 //============================================================================//
 export const showCallElements = (callType) => {
-  if (callType === constant.callType.CHAT_PERSONAL_CODE) {
+  if (
+    callType === constant.callType.CHAT_PERSONAL_CODE ||
+    callType === constant.callType.CHAT_STRANGER
+  ) {
     // Show chat call element
     showChatCallElements();
   }
 
-  if (callType === constant.callType.VIDEO_PERSONAL_CODE) {
+  if (
+    callType === constant.callType.VIDEO_PERSONAL_CODE ||
+    callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
     // Show video call element
     showVideoCallElements();
   }
@@ -207,7 +230,7 @@ export const appendMessage = (message, right = false) => {
   const messageElement = right
     ? elements.getRightMessage(message)
     : elements.getLeftMessage(message);
-  // console.log(messageContainer);
+
   messageContainer.appendChild(messageElement);
 };
 //----------------------------------------------------------------------------//
@@ -297,6 +320,22 @@ export const updateUIAfterHangup = (callType) => {
 };
 //============================================================================//
 
+//============================================================================//
+// Toggle the check in the checkbox
+export const updateStrangerCheckbox = (allowConnections) => {
+  const checkboxCheckImg = document.getElementById(
+    "allow_strangers_checkbox_image"
+  );
+
+  // If the check box contains the classname "display_none" add it
+  if (allowConnections) {
+    showElement(checkboxCheckImg);
+  } else {
+    hideElement(checkboxCheckImg);
+  }
+};
+//============================================================================//
+
 //======================== UI HELPER FUNCTIONS ===============================//
 const enableDashboard = () => {
   // Cache dashboard blocker div to enable blur
@@ -319,7 +358,7 @@ const disableDashboard = () => {
 };
 //============================================================================//
 
-//============================================================================//
+// HELPER FUNCTION TO ADD OR REMOVE css property "display: none" //
 const hideElement = (element) => {
   // If the dialog exist in the dialog parent div remove the dialog
   if (!element.classList.contains("display_none")) {

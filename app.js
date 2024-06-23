@@ -7,9 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = createServer(app);
-const socketIo = new Server(server, {
-  /* options */
-});
+const socketIo = new Server(server, {});
 // socketIo
 //===========================================================================================//
 app.use(express.json());
@@ -18,10 +16,6 @@ app.use(express.json());
  * Middleware
  */
 const logReq = (request, response, next) => {
-  console.log(
-    `${request.method} was made to ${request.url} from the hostname: ${request.hostname}!!!`
-  );
-  console.log("Request received!!!");
   next();
 };
 app.use(logReq);
@@ -36,32 +30,28 @@ app.use(express.static("public_html"));
 //===========================================================================================//
 
 //===========================================================================================//
-//-------------------------------------------------------------------------------------------//
-// Get route
+// Get routes
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public_html/index.html");
 });
-//-------------------------------------------------------------------------------------------//
 //===========================================================================================//
 
-//===========================================================================================//
+//================== SOCKET.IO CONNECTION AND EVENT LISTENER CONFIGURATION ==================//
+// connectedPeerStrangers stores an array of the connected peer strangers socket.id's
+let connectedPeerStrangers = [];
 // connectedUsers stores an array of the connected socket.id's
 let connectedUsers = [];
 // Connect to socket.io
 socketIo.on("connection", (socket) => {
   //===========================================================================================//
-  // console.log(`User has connected to socket.IO with the ID: ${socket.id}`);
   // Add the active socket.id to the connectedUsers array
   connectedUsers.push(socket.id);
   //===========================================================================================//
 
   //================================= EMIT PRE-OFFER EVENT ====================================//
-  // Emit the socket.io pre-offer event
+  // Emit the socket.io pre-offer emit event
   socket.on("pre-offer", (data) => {
     const { sendPersonalId, callType } = data;
-    // console.log(
-    //   `Pre-Offer from the app.js page with the data: ${sendPersonalId} - ${callType}`
-    // );
 
     const connectedUser = connectedUsers.find(
       (userSocketId) => userSocketId === sendPersonalId
@@ -85,58 +75,98 @@ socketIo.on("connection", (socket) => {
   //===========================================================================================//
 
   //============================== EMIT PRE-OFFER-ANSWER EVENT ================================//
-  // Emit the socket.io pre-offer event
+  // Emit the socket.io pre-offer emit event
   socket.on("pre-offer-answer", (data) => {
     const { callerSocketID, preOfferAnswer } = data;
-    // console.log(data);
-    // console.log(connectedUsers);
 
     const connectedUser = connectedUsers.find(
       (userSocketId) => userSocketId === callerSocketID
     );
-    // console.log(connectedUser);
+
     if (connectedUser) {
       socketIo.to(callerSocketID).emit("pre-offer-answer", data);
     }
   });
   //===========================================================================================//
 
-  //============================== EMIT RTC EVENT ================================//
-  // Emit the socket.io webRTC-signaling event
+  //==================================== EMITS RTC EVENT ======================================//
+  // Emit the socket.io webRTC-signaling emit event
   socket.on("webRTC-signaling", (data) => {
     const { connectedUserSocketId } = data;
 
     const connectedUser = connectedUsers.find(
       (userSocketId) => userSocketId === connectedUserSocketId
     );
-    // console.log(connectedUser);
+
     if (connectedUser) {
       socketIo.to(connectedUserSocketId).emit("webRTC-signaling", data);
     }
   });
   //===========================================================================================//
 
-  //===========================================================================================//
-  // Listening for the hang up event
+  //============================== LISTENING FOR HANG-UP EVENT ================================//
+  // Listening for the hang up emit event
   socket.on("user-hanged-up", (data) => {
     const { connectedUserSocketId } = data;
 
     const connectedUser = connectedUsers.find(
       (userSocketId) => userSocketId === connectedUserSocketId
     );
-    // console.log(connectedUser);
+
     if (connectedUser) {
       socketIo.to(connectedUserSocketId).emit("user-hanged-up");
     }
   });
   //===========================================================================================//
 
+  //======================== LISTENING FOR STRANGER CONNECTION EVENT ==========================//
+  // Listening for a stranger connection emit event
+  socket.on("stranger-connection-status", (data) => {
+    const { status } = data;
+
+    if (status) {
+      // Add the active peers socket.id to the connectedPeerStrangers array
+      connectedPeerStrangers.push(socket.id);
+    } else {
+      // filters out a peer strangers id that wants to join call
+      const newConnectedPeerStrangers = connectedPeerStrangers.filter(
+        (peerSocketId) => peerSocketId !== socket.id
+      );
+      // This adds the filtered out socket id to the connectedPeerStrangers[]
+      connectedPeerStrangers = newConnectedPeerStrangers;
+    }
+  });
+  //===========================================================================================//
+
+  //===========================================================================================//
+  // Listen for get-stranger-socket-id emit event
+  // to get the peer strangers id's
+  socket.on("get-stranger-socket-id", () => {
+    let randomStrangerSocketId;
+    const filterConnectedPeersStranger = connectedPeerStrangers.filter(
+      (peerSocketId) => peerSocketId !== socket.id
+    );
+
+    if (filterConnectedPeersStranger.length > 0) {
+      randomStrangerSocketId =
+        filterConnectedPeersStranger[
+          Math.floor(Math.random() * filterConnectedPeersStranger.length)
+        ];
+    } else {
+      randomStrangerSocketId = null;
+    }
+
+    const data = {
+      randomStrangerSocketId,
+    };
+
+    socketIo.to(socket.id).emit("stranger-socket-id", data);
+  });
+  //===========================================================================================//
+
   //=============================== DISCONNECT FROM SOCKET.IO =================================//
   // Disconnect to socket.io when the browser closes //
   socket.on("disconnect", () => {
-    console.log(
-      `Successfully disconnected to wss/socket.io server with the id ${socket.id}`
-    );
     // After disconnecting filter through the connectedUsers array
     // and only return the socket.id's still in the array
     const newConnectedUsers = connectedUsers.filter((userSocketId) => {
@@ -144,7 +174,12 @@ socketIo.on("connection", (socket) => {
     });
     // The remaining socket.id's remaining will be added to the connectedUsers
     connectedUsers = newConnectedUsers;
-    console.log(connectedUsers);
+    // Available connect users
+    const newConnectedPeerStrangers = connectedPeerStrangers.filter(
+      (peerSocketId) => peerSocketId !== socket.id
+    );
+    // This adds a socket id that is not active
+    connectedPeerStrangers = newConnectedPeerStrangers;
   });
   //===========================================================================================//
 });

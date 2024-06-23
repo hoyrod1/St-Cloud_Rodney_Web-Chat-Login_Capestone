@@ -2,6 +2,7 @@ import * as store from "./store.js";
 import * as webRTChandler from "./webRTCHandler.js";
 import * as ui from "./ui.js";
 import * as constant from "./constant.js";
+import * as strangerUtils from "./strangerUtils.js";
 //======================================================================================//
 
 //======================================================================================//
@@ -16,11 +17,6 @@ export const registerSocketEvent = (socket) => {
   socketIO = socket;
   //------------------------------------------------------------------------------------//
   socket.on("connect", () => {
-    // Caching the socket.io connection
-    // console.log(
-    //   `Successfully connected to wss/socket.io server with the id ${socket.id}`
-    // );
-
     // Injecting the socket.id in the setSoketId function in the store.js file
     store.setSocketId(socket.id);
     // Injecting the socket.id into the updatePersonalCode function be displayed in the UI
@@ -64,15 +60,17 @@ export const registerSocketEvent = (socket) => {
     }
   });
   //------------------------------------------------------------------------------------//
+
+  //------------------------------------------------------------------------------------//
+  socket.on("stranger-socket-id", (data) => {
+    strangerUtils.connectWithStranger(data);
+  });
+  //------------------------------------------------------------------------------------//
 };
 //======================================================================================//
 
 //======================================================================================//
 export const sendPreOffer = (data) => {
-  // const { callType, sendPersonalId } = data;
-  // console.log(
-  //   `Emmitting pre-offer from sendPreOffer function with the data value: ${callType} ${sendPersonalId}`
-  // );
   // Emmitting a event "pre-offer" and passing the video or chat call type data
   socketIO.emit("pre-offer", data);
 };
@@ -80,8 +78,6 @@ export const sendPreOffer = (data) => {
 
 //======================================================================================//
 export const sendPreOfferAnswer = (data) => {
-  // const { callerSocketID, preOfferAnswer } = data;
-  // console.log(`Emmitting pre-offer-answer ${preOfferAnswer} ${callerSocketID}`);
   // Emmitting a event "pre-offer-answer" and passing the video or chat call type data
   socketIO.emit("pre-offer-answer", data);
 };
@@ -96,5 +92,17 @@ export const sendDataUsingWebRTCSignaling = (data) => {
 //======================================================================================//
 export const sendUserHangedUp = (data) => {
   socketIO.emit("user-hanged-up", data);
+};
+//======================================================================================//
+
+//======================================================================================//
+export const changeStrangerConnectionStatus = (data) => {
+  socketIO.emit("stranger-connection-status", data);
+};
+//======================================================================================//
+
+//======================================================================================//
+export const getStrangerSocketId = () => {
+  socketIO.emit("get-stranger-socket-id");
 };
 //======================================================================================//

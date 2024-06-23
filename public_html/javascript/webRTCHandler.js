@@ -98,7 +98,10 @@ const createPeerConnection = () => {
   };
 
   // Add our stream to peer connection
-  if (connectedUsersDetail.callType === constant.callType.VIDEO_PERSONAL_CODE) {
+  if (
+    connectedUsersDetail.callType === constant.callType.VIDEO_PERSONAL_CODE ||
+    connectedUsersDetail.callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
     const localStream = store.getState().localStream;
 
     for (const track of localStream.getTracks()) {
@@ -124,6 +127,8 @@ export const sendPreOffer = (callType, sendPersonalId) => {
     socketId: sendPersonalId,
   };
   //-----------------------------------------------------------------------------//
+
+  //-----------------------------------------------------------------------------//
   if (
     callType === constant.callType.CHAT_PERSONAL_CODE ||
     callType === constant.callType.VIDEO_PERSONAL_CODE
@@ -134,13 +139,32 @@ export const sendPreOffer = (callType, sendPersonalId) => {
     };
     // Calling the showIncomingCallDialog to render the reject incoming call dialog div
     ui.receivingCallDialog(callingDialogRejectCallHandler);
-    // This sets the call state for the receiving caller to unavailable
-    // When reciving caller is on a video chat call already
+    // This sets the call state for the caller to unavailable
+    // When caller is on a video chat call already
     store.setCallState(constant.callSate.CALL_UNAVAILABLE);
     // Calling sendPreOffer() from the wss.js file
     // And passing the sendingData object containing
     // The call type(Video or Chat) and the socket.io ID
     wss.sendPreOffer(sendingData);
+  }
+  //-----------------------------------------------------------------------------//
+
+  //-----------------------------------------------------------------------------//
+  if (
+    callType === constant.callType.CHAT_STRANGER ||
+    callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
+    const strangerData = {
+      callType,
+      sendPersonalId,
+    };
+    // This sets the call state for the caller to unavailable
+    // When the caller is on a video chat call already
+    store.setCallState(constant.callSate.CALL_UNAVAILABLE);
+    // Calling sendPreOffer() from the wss.js file
+    // And passing the sendingData object containing
+    // The call type(Video or Chat) and the socket.io ID
+    wss.sendPreOffer(strangerData);
   }
 };
 //===============================================================================//
@@ -152,6 +176,8 @@ export const handlePreOffer = (data) => {
   // Check to see if recieving caller is not on available
   // If unavailable set pre offer answer to CALL_UNAVAILABLE
   if (!checkCallPossibility()) {
+    // Send the caller the receiving callers call unavailable data
+    // (Logic on line 252)
     return sendingPreOfferAnswer(
       constant.preOfferAnswer.CALL_UNAVAILABLE,
       callerSocketId
@@ -174,14 +200,30 @@ export const handlePreOffer = (data) => {
   ) {
     ui.showIncomingCallDialog(callType, acceptCallHandler, rejectCallHandler);
   }
+  //---------------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------//
+  if (
+    callType === constant.callType.CHAT_STRANGER ||
+    callType === constant.callType.VIDEO_STRANGERL_CODE
+  ) {
+    // Create peer connection (logic on line 49)
+    createPeerConnection();
+    // Send the caller the receiving callers call accepted data
+    // (Logic on line 252)
+    sendingPreOfferAnswer(constant.preOfferAnswer.CALL_ACCEPTED);
+    ui.showCallElements(connectedUsersDetail.callType);
+  }
+  //---------------------------------------------------------------------------//
 };
 //===============================================================================//
 
 //===============================================================================//
 const acceptCallHandler = () => {
+  // Send the caller the receiving callers call accepted data
+  // (Logic on line 252)
   sendingPreOfferAnswer(constant.preOfferAnswer.CALL_ACCEPTED);
-  console.log("Accepted Calling Handler");
-  // Create peer connection
+  // Create peer connection (logic on line 49)
   createPeerConnection();
   // Show dialog that callee was accepted
   ui.showCallElements(connectedUsersDetail.callType);
@@ -190,9 +232,8 @@ const acceptCallHandler = () => {
 
 //===============================================================================//
 const rejectCallHandler = () => {
-  console.log(
-    `Call Handler ${constant.preOfferAnswer.CALL_REJECTED} from ${connectedUsersDetail.socketId}`
-  );
+  // Send the caller the receiving callers call rejection data
+  // (Logic on line 252)
   sendingPreOfferAnswer();
   setIncomingCallsAvailable();
   sendingPreOfferAnswer(constant.preOfferAnswer.CALL_REJECTED);
@@ -201,7 +242,6 @@ const rejectCallHandler = () => {
 
 //===============================================================================//
 const callingDialogRejectCallHandler = () => {
-  console.log("Reject Calling Handler");
   const data = {
     connectedUserSocketId: connectedUsersDetail.socketId,
   };
@@ -222,7 +262,7 @@ const sendingPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
     callerSocketID: callSoketId,
     preOfferAnswer,
   };
-  console.log("Sending Pre-Offer Handler");
+
   ui.removeAllDialog();
   wss.sendPreOfferAnswer(data);
 };
@@ -231,8 +271,7 @@ const sendingPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
 //===============================================================================//
 export const handlePreOfferAnswer = (data) => {
   const { preOfferAnswer } = data;
-  // console.log(data);
-  // console.log(`This call is ${preOfferAnswer}`);
+
   ui.removeAllDialog();
 
   if (preOfferAnswer === constant.preOfferAnswer.CALLEE_NOT_FOUND) {
@@ -262,7 +301,7 @@ export const handlePreOfferAnswer = (data) => {
   if (preOfferAnswer === constant.preOfferAnswer.CALL_ACCEPTED) {
     // Show dialog that callee was accepted
     ui.showCallElements(connectedUsersDetail.callType);
-    // Create peer connection
+    // Create peer connection (logic on line 49)
     createPeerConnection();
     sendWebRTCOffer();
   }
@@ -298,16 +337,12 @@ export const handleWebRTCOffer = async (data) => {
 
 //===============================================================================//
 export const handleWebRTCAnswer = async (data) => {
-  console.log(`Handling webRTC answer`);
-  console.log(data);
   await peerConnection.setRemoteDescription(data.answer);
 };
 //===============================================================================//
 
 //===============================================================================//
 export const handleWebRTCCandidate = async (data) => {
-  console.log(data);
-  console.log("Handling incoming web RTC candidate");
   try {
     await peerConnection.addIceCandidate(data.candidate);
   } catch (error) {
@@ -355,7 +390,7 @@ export const switchBetweenCameraAndScreeningSharing = async (
     ui.updateLocalVideo(localStream);
   } else {
     //---------------------- Enable screen sharing ----------------------//
-    console.log(`Enable screen sharing`);
+
     try {
       // The getDisplayMedia() gets access to screen sharing screen
       screenSharingStream = await navigator.mediaDevices.getDisplayMedia({

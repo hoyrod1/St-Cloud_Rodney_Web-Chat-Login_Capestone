@@ -3,6 +3,7 @@ import * as webRTChandler from "./webRTCHandler.js";
 import * as constant from "./constant.js";
 import * as wss from "./wss.js";
 import * as recordingUtils from "./recordingUtils.js";
+import * as strangerUtils from "./strangerUtils.js";
 import * as ui from "./ui.js";
 // import { getIncomingCallDialog } from "./elements.js";
 //========================= CONNECT USING SOCKET.IO =============================//
@@ -40,14 +41,14 @@ const personalCodeChatButton = document.getElementById(
 //------------------------------------------------------------------------------//
 // Attached a addeventListener for chat button
 personalCodeChatButton.addEventListener("click", (e) => {
-  // console.log(`Personal Chat has been clicked`);
+  
   const sendPersonalId = document.getElementById("personal_code_input").value;
   const chatCallType = constant.callType.CHAT_PERSONAL_CODE;
   webRTChandler.sendPreOffer(chatCallType, sendPersonalId);
 });
 // Attached a addeventListener for video button
 personalCodeVideoButton.addEventListener("click", (e) => {
-  // console.log(`Personal Video has been clicked`);
+  
   const sendPersonalId = document.getElementById("personal_code_input").value;
   const videoCallType = constant.callType.VIDEO_PERSONAL_CODE;
   webRTChandler.sendPreOffer(videoCallType, sendPersonalId);
@@ -55,13 +56,30 @@ personalCodeVideoButton.addEventListener("click", (e) => {
 //===============================================================================//
 
 //===============================================================================//
-// // CACHE THE STRANGERS VIDEO BUTTON TO STORE THE VIDEO ID
+// CACHE THE STRANGERS VIDEO BUTTON TO STORE THE VIDEO ID
 const strangerVideoButton = document.getElementById("stranger_video_button");
 // CACHE THE STRANGERS CHAT BUTTON TO STORE THE CHAT ID
 const strangerChatButton = document.getElementById("stranger_chat_button");
+// CACHE THE ID FOR THE STRANGER CHECKBOX EVENT
+const checkBox = document.getElementById("allow_strangers_checkbox");
 //-------------------------------------------------------------------------------//
-strangerVideoButton.addEventListener("click", (e) => {});
-strangerChatButton.addEventListener("click", (e) => {});
+// Event Listener for the stranger check box
+checkBox.addEventListener("click", (e) => {
+  const checkboxState = store.getState().allowConnectionFromStrangers;
+  ui.updateStrangerCheckbox(!checkboxState);
+  store.setAllowConnectionsFromStrangers(!checkboxState);
+  strangerUtils.changeStrangerConnectionStatus(!checkboxState);
+});
+// Event Listener for the stranger video button
+strangerVideoButton.addEventListener("click", (e) => {
+  strangerUtils.getStrangerSocketIdAndConnect(
+    constant.callType.VIDEO_STRANGERL_CODE
+  );
+});
+// Event Listener for the stranger chat button
+strangerChatButton.addEventListener("click", (e) => {
+  strangerUtils.getStrangerSocketIdAndConnect(constant.callType.CHAT_STRANGER);
+});
 //===============================================================================//
 
 //======================= Event listnerers for video call =======================//
@@ -113,9 +131,9 @@ switchForScreeningSharingButton.addEventListener("click", (e) => {
 // Caching the chat input
 const newMessageInput = document.getElementById("new_message_input");
 newMessageInput.addEventListener("keydown", (e) => {
-  // console.log("Key was pressed");
+  
   const key = e.key;
-  // console.log(e.target.value);
+  
   if (key === "Enter") {
     webRTChandler.sendMessageUsingDataChannel(e.target.value);
     ui.appendMessage(e.target.value, true);
@@ -179,12 +197,4 @@ const hangUpChatButton = document.getElementById("finish_chat_call_button");
 hangUpChatButton.addEventListener("click", (e) => {
   webRTChandler.handleHangUp();
 });
-//===============================================================================//
-
-//===============================================================================//
-// getIncomingCallDialog(
-//   "Video",
-//   () => {},
-//   () => {}
-// );
 //===============================================================================//

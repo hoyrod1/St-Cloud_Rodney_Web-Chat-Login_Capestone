@@ -8,7 +8,6 @@ export const getIncomingCallDialog = (
   acceptCallHandler,
   rejectCallHandler
 ) => {
-  // console.log("Getting a incoming call dialog!!!");
   //----------------------------------------------------//
   const dialogDivWrap = document.createElement("div");
   dialogDivWrap.classList.add("dialog_wrapper");
@@ -94,7 +93,6 @@ export const getIncomingCallDialog = (
 
 //****************************************************************************//
 export const receivedCallDialog = (rejectCallHandler) => {
-  // console.log("Recieved incoming call dialog!!!");
   //----------------------------------------------------//
   const dialogDivWrap = document.createElement("div");
   dialogDivWrap.classList.add("dialog_wrapper");
