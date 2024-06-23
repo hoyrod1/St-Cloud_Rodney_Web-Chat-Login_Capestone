@@ -2,7 +2,7 @@
   "name": "325-1-capestone-project",
   "version": "1.0.0",
   "description": "1 on 1 Personal Training Video App",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
