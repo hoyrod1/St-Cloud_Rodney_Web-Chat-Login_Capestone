@@ -4,6 +4,7 @@ const mongoose = require("./db-connect.js");
 const Trainer = require("../model/Trainer.js");
 const TrainingPackage = require("../model/TrainingPackage.js");
 const Member = require("../model/Member.js");
+const AssessmentForm = require("../model/AssessmentForm.js");
 //==========================================================================================//
 
 const trainers = [
@@ -140,11 +141,30 @@ const members = [
   },
 ];
 
+const assessmentForm = [
+  {
+    goals: "lose weight",
+    currentBodyWeight: "180lb",
+    email: "booboo@example.com",
+  },
+  {
+    goals: "Put on muscle",
+    currentBodyWeight: "150lb",
+    email: "MrOlympia@aol.com",
+  },
+  {
+    goals: "Improve diet habit",
+    currentBodyWeight: "250lb",
+    email: "justin@example.com",
+  },
+];
+
 async function seed() {
   try {
     await Trainer.deleteMany({});
     await TrainingPackage.deleteMany({});
     await Member.deleteMany({});
+    await AssessmentForm.deleteMany({});
     //======================================================//
     const createdTrainers = await Trainer.create(trainers);
     console.log("Trainer: ", createdTrainers);
@@ -158,6 +178,10 @@ async function seed() {
     //======================================================//
     const createdMembers = await Member.create(members);
     console.log("Member: ", createdMembers);
+    //======================================================//
+    //======================================================//
+    const assessmentForm = await AssessmentForm.create(assessmentForm);
+    console.log("AssessmentForm: ", assessmentForm);
     //======================================================//
     //======================================================//
     await mongoose.connection.close();
