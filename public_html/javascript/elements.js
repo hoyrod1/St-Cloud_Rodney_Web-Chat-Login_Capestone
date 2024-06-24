@@ -28,7 +28,7 @@ export const getIncomingCallDialog = (
   const imageContainerDiv = document.createElement("div");
   imageContainerDiv.classList.add("dialog_image_container");
   const image = document.createElement("img");
-  const avatarImgPath = "./utilities/test-images/dialogAvatar.png";
+  const avatarImgPath = "./utilities/test-images/dialogPic.png";
   image.src = avatarImgPath;
   imageContainerDiv.appendChild(image);
   //----------------------------------------------------//
@@ -44,7 +44,7 @@ export const getIncomingCallDialog = (
 
   const acceptCallImg = document.createElement("img");
   acceptCallImg.classList.add("dialog_button_image");
-  const acceptCallImgPath = "./utilities/test-images/acceptCall.png";
+  const acceptCallImgPath = "./utilities/test-images/accept.png";
   acceptCallImg.src = acceptCallImgPath;
   acceptCallButton.appendChild(acceptCallImg);
   // Reject Call Button
@@ -53,7 +53,7 @@ export const getIncomingCallDialog = (
 
   const rejectCallImg = document.createElement("img");
   rejectCallImg.classList.add("dialog_button_image");
-  const rejectCallImgPath = "./utilities/test-images/rejectCall.png";
+  const rejectCallImgPath = "./utilities/test-images/reject.png";
   rejectCallImg.src = rejectCallImgPath;
   rejectCallButton.appendChild(rejectCallImg);
   //----------------------------------------------------//
@@ -110,7 +110,7 @@ export const receivedCallDialog = (rejectCallHandler) => {
   const imageContainerDiv = document.createElement("div");
   imageContainerDiv.classList.add("dialog_image_container");
   const image = document.createElement("img");
-  const avatarImgPath = "./utilities/test-images/dialogAvatar.png";
+  const avatarImgPath = "./utilities/test-images/dialogPic.png";
   image.src = avatarImgPath;
   imageContainerDiv.appendChild(image);
   //----------------------------------------------------//
@@ -123,7 +123,7 @@ export const receivedCallDialog = (rejectCallHandler) => {
   // Reject incoming call Button image
   const rejectCallImg = document.createElement("img");
   rejectCallImg.classList.add("dialog_button_image");
-  const rejectCallImgPath = "./utilities/test-images/rejectCall.png";
+  const rejectCallImgPath = "./utilities/test-images/reject.png";
   rejectCallImg.src = rejectCallImgPath;
   rejectCallButton.append(rejectCallImg);
   //====================================================//
@@ -163,7 +163,7 @@ export const getInfoDialog = (dialogTitle, descriptionText) => {
   const imageContainerDiv = document.createElement("div");
   imageContainerDiv.classList.add("dialog_image_container");
   const image = document.createElement("img");
-  const avatarImgPath = "./utilities/test-images/dialogAvatar.png";
+  const avatarImgPath = "./utilities/test-images/dialog.png";
   image.src = avatarImgPath;
   imageContainerDiv.appendChild(image);
   //----------------------------------------------------//
