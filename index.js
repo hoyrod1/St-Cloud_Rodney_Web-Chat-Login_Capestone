@@ -13,10 +13,10 @@ const socketIo = new Server(server, {});
 // socketIo
 //===========================================================================================//
 //-------------------------------------- REQUIRED ROUTES ------------------------------------//
-const trainerRoutes = require("./routes/trainer.js");
-const membersRoutes = require("./routes/members.js");
-const assessmentRoutes = require("./routes/assessmentForm.js");
-const trainingPackagesRoutes = require("./routes/trainingPackages.js");
+// const trainerRoutes = require("./routes/trainer.js");
+// const membersRoutes = require("./routes/members.js");
+// const assessmentRoutes = require("./routes/assessmentForm.js");
+// const trainingPackagesRoutes = require("./routes/trainingPackages.js");
 //===========================================================================================//
 
 //===========================================================================================//
