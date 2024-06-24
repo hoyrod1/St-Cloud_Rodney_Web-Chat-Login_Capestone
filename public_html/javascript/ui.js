@@ -299,7 +299,9 @@ export const updateUIAfterHangup = (callType) => {
     const callButtons = document.getElementById("call_buttons");
     hideElement(callButtons);
   } else {
-    const chatCallButton = document.getElementById("finish_chat_call_button");
+    const chatCallButton = document.getElementById(
+      "finish_chat_button_container"
+    );
     hideElement(chatCallButton);
   }
 
