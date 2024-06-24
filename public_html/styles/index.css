@@ -82,8 +82,8 @@ body {
 }
 
 .description_container_paragraph {
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: bolder;
+  font-size: 15px;
   color: white;
 }
 
@@ -104,7 +104,9 @@ body {
 
 .personal_code_title_paragraph {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
+  color: brown;
+  text-decoration: underline;
 }
 
 .personal_code_value_container {
@@ -136,8 +138,8 @@ body {
 }
 
 .personal_code_connecting_paragraph {
-  font-weight: 500;
-  font-size: 18px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .personal_code_connecting_input_container {
@@ -182,8 +184,8 @@ body {
 }
 
 .stranger_title_container {
-  font-weight: 500;
-  font-size: 18px;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .stranger_buttons_container {
@@ -199,7 +201,7 @@ body {
 }
 
 .checkbox_connection {
-  width: 30px;
+  width: 40px;
   height: 30px;
   background: rgba(196, 196, 196, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -211,8 +213,8 @@ body {
 }
 
 .checkbox_container_paragraph {
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: bold;
+  font-size: 12px;
   margin-left: 15px;
 }
 
