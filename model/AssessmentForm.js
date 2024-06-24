@@ -22,5 +22,5 @@ const assessmentForm = Schema({
   },
 });
 
-assessmentForm.index({ goals: 1 });
+assessmentForm.index({ email: 1 });
 module.exports = model("AssessmentForm", assessmentForm);

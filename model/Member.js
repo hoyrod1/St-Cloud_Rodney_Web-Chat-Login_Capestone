@@ -22,4 +22,6 @@ const memberSchema = Schema({
   },
 });
 
+memberSchema.index({ email: 1 });
+
 module.exports = model("Member", memberSchema);

@@ -1,3 +1,5 @@
+require("dotenv").config();
+//====================================================================//
 const express = require("express");
 const req = require("express/lib/request");
 const bodyParser = require("body-parser");
@@ -10,11 +12,19 @@ const server = createServer(app);
 const socketIo = new Server(server, {});
 // socketIo
 //===========================================================================================//
+//-------------------------------------- REQUIRED ROUTES ------------------------------------//
+const trainerRoutes = require("./routes/trainer.js");
+const membersRoutes = require("./routes/members.js");
+const assessmentRoutes = require("./routes/assessmentForm.js");
+const trainingPackagesRoutes = require("./routes/trainingPackages.js");
+//===========================================================================================//
+
+//===========================================================================================//
 app.use(express.json());
-//-------------------------------------------------------------------------------------------//
-/**
- * Middleware
- */
+//===========================================================================================//
+
+//===========================================================================================//
+// Middleware
 const logReq = (request, response, next) => {
   next();
 };

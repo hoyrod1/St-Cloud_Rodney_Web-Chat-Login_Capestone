@@ -141,7 +141,7 @@ const members = [
   },
 ];
 
-const assessmentForm = [
+const assessmentForms = [
   {
     goals: "lose weight",
     currentBodyWeight: "180lb",
@@ -161,29 +161,42 @@ const assessmentForm = [
 
 async function seed() {
   try {
+    //======================================================//
+    // Delete data from database
     await Trainer.deleteMany({});
     await TrainingPackage.deleteMany({});
     await Member.deleteMany({});
     await AssessmentForm.deleteMany({});
     //======================================================//
-    const createdTrainers = await Trainer.create(trainers);
-    console.log("Trainer: ", createdTrainers);
+
     //======================================================//
+    // Create Trainer dummy data
+    // const createdTrainers = await Trainer.create(trainers);
+    // console.log("Trainer: ", createdTrainers);
+    // //======================================================//
+
+    // //======================================================//
+    // Create TrainingPackage dummy data
+    // const createdTrainingPackages = await TrainingPackage.create(
+    //   trainingPackages
+    // );
+    // console.log("TrainingPackage: ", createdTrainingPackages);
+    // //======================================================//
+
+    // //======================================================//
+    // // Create Member dummy data
+    // const createdMembers = await Member.create(members);
+    // console.log("Member: ", createdMembers);
+    // //======================================================//
+
+    // //======================================================//
+    // Create AssessmentForm dummy data
+    // const assessmentForm = await AssessmentForm.create(assessmentForms);
+    // console.log("AssessmentForm: ", assessmentForm);
     //======================================================//
-    const createdTrainingPackages = await TrainingPackage.create(
-      trainingPackages
-    );
-    console.log("TrainingPackage: ", createdTrainingPackages);
+
     //======================================================//
-    //======================================================//
-    const createdMembers = await Member.create(members);
-    console.log("Member: ", createdMembers);
-    //======================================================//
-    //======================================================//
-    const assessmentForm = await AssessmentForm.create(assessmentForm);
-    console.log("AssessmentForm: ", assessmentForm);
-    //======================================================//
-    //======================================================//
+    // Close Database Connection
     await mongoose.connection.close();
     //======================================================//
   } catch (err) {

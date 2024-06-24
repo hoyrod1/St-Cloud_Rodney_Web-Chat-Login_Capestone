@@ -1,23 +1,20 @@
 const { Schema, model } = require("../config/db-connect");
 
-const trainerSchema = Schema({
-  name: {
+const trainingPackageSchema = Schema({
+  type: {
     type: String,
     required: true,
   },
-  username: {
+  pricePerHour: {
     type: String,
     required: true,
   },
-  email: {
+  description: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 
-trainerSchema.index({ name: 1 });
-trainerSchema.index({ username: 1 });
-trainerSchema.index({ email: 1 });
+trainingPackageSchema.index({ type: 1 });
 
-module.exports = model("Trainer", trainerSchema);
+module.exports = model("TrainingPackage", trainingPackageSchema);

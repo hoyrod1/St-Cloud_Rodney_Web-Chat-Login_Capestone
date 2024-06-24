@@ -16,8 +16,6 @@ const trainerSchema = Schema({
   },
 });
 
-trainerSchema.index({ name: 1 });
-trainerSchema.index({ username: 1 });
 trainerSchema.index({ email: 1 });
 
 module.exports = model("Trainer", trainerSchema);

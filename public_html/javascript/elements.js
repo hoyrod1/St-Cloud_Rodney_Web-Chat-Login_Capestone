@@ -163,7 +163,7 @@ export const getInfoDialog = (dialogTitle, descriptionText) => {
   const imageContainerDiv = document.createElement("div");
   imageContainerDiv.classList.add("dialog_image_container");
   const image = document.createElement("img");
-  const avatarImgPath = "./utilities/test-images/dialog.png";
+  const avatarImgPath = "./utilities/test-images/dialogPic.png";
   image.src = avatarImgPath;
   imageContainerDiv.appendChild(image);
   //----------------------------------------------------//
