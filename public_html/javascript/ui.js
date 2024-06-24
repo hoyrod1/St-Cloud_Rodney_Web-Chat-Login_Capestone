@@ -205,8 +205,8 @@ const showVideoCallElements = () => {
 //============================================================================//
 
 //============================== UI CALL BUTTON ==============================//
-const micOnImgSrc = "./utilities/test-images/mic.png";
-const micOffImgSrc = "./utilities/test-images/micOff.png";
+const micOnImgSrc = "/utilities/test-images/mic.png";
+const micOffImgSrc = "/utilities/test-images/micOff.png";
 export const updateMicButton = (micActive) => {
   const micButtonImage = document.getElementById("mic_button_image");
   micButtonImage.src = micActive ? micOffImgSrc : micOnImgSrc;
@@ -214,8 +214,8 @@ export const updateMicButton = (micActive) => {
 //============================================================================//
 
 //============================= UI VIDEO BUTTON ==============================//
-const cameraOnImgSrc = "./utilities/test-images/camera.png";
-const cameraOffImgSrc = "./utilities/test-images/cameraOff.png";
+const cameraOnImgSrc = "/utilities/test-images/camera.png";
+const cameraOffImgSrc = "/utilities/test-images/cameraOff.png";
 export const updateCameraButton = (cameraActive) => {
   const cameraButtonImage = document.getElementById("camera_button_image");
   cameraButtonImage.src = cameraActive ? cameraOffImgSrc : cameraOnImgSrc;

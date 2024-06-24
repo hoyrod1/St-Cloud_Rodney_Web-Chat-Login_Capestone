@@ -41,14 +41,12 @@ const personalCodeChatButton = document.getElementById(
 //------------------------------------------------------------------------------//
 // Attached a addeventListener for chat button
 personalCodeChatButton.addEventListener("click", (e) => {
-  
   const sendPersonalId = document.getElementById("personal_code_input").value;
   const chatCallType = constant.callType.CHAT_PERSONAL_CODE;
   webRTChandler.sendPreOffer(chatCallType, sendPersonalId);
 });
 // Attached a addeventListener for video button
 personalCodeVideoButton.addEventListener("click", (e) => {
-  
   const sendPersonalId = document.getElementById("personal_code_input").value;
   const videoCallType = constant.callType.VIDEO_PERSONAL_CODE;
   webRTChandler.sendPreOffer(videoCallType, sendPersonalId);
@@ -97,7 +95,7 @@ micButton.addEventListener("click", (e) => {
   localStream.getAudioTracks()[0].enabled = !micEnabled;
   ui.updateMicButton(micEnabled);
 });
-//------------------------ enable and diable the video ---------------------------//
+//------------------------ enable and disable the video ---------------------------//
 // Cache the video button
 const cameraButton = document.getElementById("camera_button");
 // Check if video button is clicked
@@ -131,9 +129,8 @@ switchForScreeningSharingButton.addEventListener("click", (e) => {
 // Caching the chat input
 const newMessageInput = document.getElementById("new_message_input");
 newMessageInput.addEventListener("keydown", (e) => {
-  
   const key = e.key;
-  
+
   if (key === "Enter") {
     webRTChandler.sendMessageUsingDataChannel(e.target.value);
     ui.appendMessage(e.target.value, true);
