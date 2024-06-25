@@ -1,5 +1,6 @@
 require("dotenv").config();
 //====================================================================//
+const cors = require("cors");
 const express = require("express");
 const req = require("express/lib/request");
 const bodyParser = require("body-parser");
@@ -13,12 +14,13 @@ const socketIo = new Server(server, {});
 // socketIo
 //===========================================================================================//
 //-------------------------------------- REQUIRED ROUTES ------------------------------------//
-// const trainerRoutes = require("./routes/trainer.js");
-// const membersRoutes = require("./routes/members.js");
-// const assessmentRoutes = require("./routes/assessmentForm.js");
-// const trainingPackagesRoutes = require("./routes/trainingPackages.js");
+const trainerRoutes = require("./routes/trainer.js");
+const membersRoutes = require("./routes/members.js");
+const assessmentRoutes = require("./routes/assessmentForm.js");
+const trainingPackagesRoutes = require("./routes/trainingPackages.js");
 //===========================================================================================//
-
+// Use as a API feed
+app.use(cors());
 //===========================================================================================//
 app.use(express.json());
 //===========================================================================================//
@@ -40,10 +42,19 @@ app.use(express.static("public_html"));
 //===========================================================================================//
 
 //===========================================================================================//
-// Get routes
+// Get route for landing index.html page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public_html/index.html");
 });
+//====================================================================//
+// Members routes
+app.use("/members", membersRoutes);
+// Assessment routes
+app.use("/assessment-routes", assessmentRoutes);
+// Training Packages routes
+app.use("/training-packages", trainingPackagesRoutes);
+// Trainer routes
+app.use("/trainers", trainerRoutes);
 //===========================================================================================//
 
 //================== SOCKET.IO CONNECTION AND EVENT LISTENER CONFIGURATION ==================//

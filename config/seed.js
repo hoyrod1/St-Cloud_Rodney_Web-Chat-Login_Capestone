@@ -171,28 +171,28 @@ async function seed() {
 
     //======================================================//
     // Create Trainer dummy data
-    // const createdTrainers = await Trainer.create(trainers);
-    // console.log("Trainer: ", createdTrainers);
+    const createdTrainers = await Trainer.create(trainers);
+    console.log("Trainer: ", createdTrainers);
     // //======================================================//
 
     // //======================================================//
     // Create TrainingPackage dummy data
-    // const createdTrainingPackages = await TrainingPackage.create(
-    //   trainingPackages
-    // );
-    // console.log("TrainingPackage: ", createdTrainingPackages);
+    const createdTrainingPackages = await TrainingPackage.create(
+      trainingPackages
+    );
+    console.log("TrainingPackage: ", createdTrainingPackages);
     // //======================================================//
 
     // //======================================================//
     // // Create Member dummy data
-    // const createdMembers = await Member.create(members);
-    // console.log("Member: ", createdMembers);
+    const createdMembers = await Member.create(members);
+    console.log("Member: ", createdMembers);
     // //======================================================//
 
     // //======================================================//
     // Create AssessmentForm dummy data
-    // const assessmentForm = await AssessmentForm.create(assessmentForms);
-    // console.log("AssessmentForm: ", assessmentForm);
+    const assessmentForm = await AssessmentForm.create(assessmentForms);
+    console.log("AssessmentForm: ", assessmentForm);
     //======================================================//
 
     //======================================================//
